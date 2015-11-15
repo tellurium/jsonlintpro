@@ -41,7 +41,7 @@ if (!window.getComputedStyle) {
  *   with JQuery Selectors
  *
  *   $(".lined").linedtextarea({
- *   	selectedLine: 10,
+ *      selectedLine: 10,
  *    selectedClass: 'lineselect'
  *   });
  *
@@ -54,91 +54,91 @@ if (!window.getComputedStyle) {
  */
 (function($) {
 
-	$.fn.linedtextarea = function(options) {
+    $.fn.linedtextarea = function(options) {
 
-		// Get the Options
-		var opts = $.extend({}, $.fn.linedtextarea.defaults, options);
-
-
-		/*
-		 * Helper function to make sure the line numbers are always
-		 * kept up to the current system
-		 */
-		var fillOutLines = function(codeLines, h, lineNo){
-			while ( (codeLines.height() - h ) <= 0 ){
-				if ( lineNo == opts.selectedLine )
-					codeLines.append("<div class='lineno lineselect'>" + lineNo + "</div>");
-				else
-					codeLines.append("<div class='lineno'>" + lineNo + "</div>");
-
-				lineNo++;
-			}
-			return lineNo;
-		};
+        // Get the Options
+        var opts = $.extend({}, $.fn.linedtextarea.defaults, options);
 
 
-		/*
-		 * Iterate through each of the elements are to be applied to
-		 */
-		return this.each(function() {
-			var lineNo = 1;
-			var textarea = $(this);
+        /*
+         * Helper function to make sure the line numbers are always
+         * kept up to the current system
+         */
+        var fillOutLines = function(codeLines, h, lineNo){
+            while ( (codeLines.height() - h ) <= 0 ){
+                if ( lineNo == opts.selectedLine )
+                    codeLines.append("<div class='lineno lineselect'>" + lineNo + "</div>");
+                else
+                    codeLines.append("<div class='lineno'>" + lineNo + "</div>");
 
-			/* Turn off the wrapping of as we don't want to screw up the line numbers */
-			textarea.attr("wrap", "off");
-			var originalTextAreaWidth	= textarea.outerWidth();
-
-			/* Wrap the text area in the elements we need */
-			var linedTextAreaDiv	= textarea.wrap("<div class='linedwrap'></div>");
-			var linedWrapDiv 			= linedTextAreaDiv.parent();
-
-			linedWrapDiv.prepend("<div class='lines' style='width:50px'></div>");
-
-			var linesDiv	= linedWrapDiv.find(".lines");
+                lineNo++;
+            }
+            return lineNo;
+        };
 
 
-			/* Draw the number bar; filling it out where necessary */
-			linesDiv.append( "<div class='codelines'></div>" );
-			var codeLinesDiv	= linesDiv.find(".codelines");
-			lineNo = fillOutLines( codeLinesDiv, linesDiv.height(), 1 );
+        /*
+         * Iterate through each of the elements are to be applied to
+         */
+        return this.each(function() {
+            var lineNo = 1;
+            var textarea = $(this);
 
-			/* Move the textarea to the selected line */
-			if ( opts.selectedLine != -1 && !isNaN(opts.selectedLine) ){
-				var fontSize = parseInt( textarea.height() / (lineNo-2) );
-				var position = parseInt( fontSize * opts.selectedLine ) - (textarea.height()/2);
-				textarea[0].scrollTop = position;
-			}
+            /* Turn off the wrapping of as we don't want to screw up the line numbers */
+            textarea.attr("wrap", "off");
+            var originalTextAreaWidth   = textarea.outerWidth();
 
-			/* Set the width */
-			var sidebarWidth		= linesDiv.outerWidth(true);
-			var paddingHorizontal 		= parseInt( linedWrapDiv.css("border-left-width") ) + parseInt( linedWrapDiv.css("border-right-width") ) + parseInt( linedWrapDiv.css("padding-left") ) + parseInt( linedWrapDiv.css("padding-right") );
-			var linedWrapDivNewWidth 	= originalTextAreaWidth - paddingHorizontal;
-			var textareaNewWidth		= originalTextAreaWidth - sidebarWidth - paddingHorizontal;
+            /* Wrap the text area in the elements we need */
+            var linedTextAreaDiv    = textarea.wrap("<div class='linedwrap'></div>");
+            var linedWrapDiv            = linedTextAreaDiv.parent();
 
-			/* React to the scroll event */
-			textarea.scroll( function(tn){
-				var domTextArea		= $(this)[0];
-				var scrollTop 		= domTextArea.scrollTop;
-				var clientHeight 	= domTextArea.clientHeight;
-				codeLinesDiv.css( {'margin-top': (-1*scrollTop) + "px"} );
-				lineNo = fillOutLines( codeLinesDiv, scrollTop + clientHeight, lineNo );
-			});
+            linedWrapDiv.prepend("<div class='lines' style='width:50px'></div>");
 
-			window.setInterval( function(tn) {
-				linesDiv.height(textarea.outerHeight());
-				var scrollTop 		= textarea[0].scrollTop;
-				var clientHeight 	= textarea[0].clientHeight;
-				codeLinesDiv.css( {'margin-top': (-1*scrollTop) + "px"} );
-				lineNo = fillOutLines( codeLinesDiv, scrollTop + clientHeight, lineNo );
-			},10);
+            var linesDiv    = linedWrapDiv.find(".lines");
 
-		});
-	};
+
+            /* Draw the number bar; filling it out where necessary */
+            linesDiv.append( "<div class='codelines'></div>" );
+            var codeLinesDiv    = linesDiv.find(".codelines");
+            lineNo = fillOutLines( codeLinesDiv, linesDiv.height(), 1 );
+
+            /* Move the textarea to the selected line */
+            if ( opts.selectedLine != -1 && !isNaN(opts.selectedLine) ){
+                var fontSize = parseInt( textarea.height() / (lineNo-2) );
+                var position = parseInt( fontSize * opts.selectedLine ) - (textarea.height()/2);
+                textarea[0].scrollTop = position;
+            }
+
+            /* Set the width */
+            var sidebarWidth        = linesDiv.outerWidth(true);
+            var paddingHorizontal       = parseInt( linedWrapDiv.css("border-left-width") ) + parseInt( linedWrapDiv.css("border-right-width") ) + parseInt( linedWrapDiv.css("padding-left") ) + parseInt( linedWrapDiv.css("padding-right") );
+            var linedWrapDivNewWidth    = originalTextAreaWidth - paddingHorizontal;
+            var textareaNewWidth        = originalTextAreaWidth - sidebarWidth - paddingHorizontal;
+
+            /* React to the scroll event */
+            textarea.scroll( function(tn){
+                var domTextArea     = $(this)[0];
+                var scrollTop       = domTextArea.scrollTop;
+                var clientHeight    = domTextArea.clientHeight;
+                codeLinesDiv.css( {'margin-top': (-1*scrollTop) + "px"} );
+                lineNo = fillOutLines( codeLinesDiv, scrollTop + clientHeight, lineNo );
+            });
+
+            window.setInterval( function(tn) {
+                linesDiv.height(textarea.outerHeight());
+                var scrollTop       = textarea[0].scrollTop;
+                var clientHeight    = textarea[0].clientHeight;
+                codeLinesDiv.css( {'margin-top': (-1*scrollTop) + "px"} );
+                lineNo = fillOutLines( codeLinesDiv, scrollTop + clientHeight, lineNo );
+            },10);
+
+        });
+    };
 
   // default options
   $.fn.linedtextarea.defaults = {
-  	selectedLine: -1,
-  	selectedClass: 'lineselect'
+    selectedLine: -1,
+    selectedClass: 'lineselect'
   };
 })(jQuery);
 
@@ -178,7 +178,7 @@ $.fn.caret = function (begin, end) {
     }
 };
 
-(function(){var n=this,t=n._,r={},e=Array.prototype,u=Object.prototype,i=Function.prototype,a=e.push,o=e.slice,c=e.concat,l=u.toString,f=u.hasOwnProperty,s=e.forEach,p=e.map,v=e.reduce,h=e.reduceRight,g=e.filter,d=e.every,m=e.some,y=e.indexOf,b=e.lastIndexOf,x=Array.isArray,_=Object.keys,j=i.bind,w=function(n){return n instanceof w?n:this instanceof w?(this._wrapped=n,void 0):new w(n)};"undefined"!=typeof exports?("undefined"!=typeof module&&module.exports&&(exports=module.exports=w),exports._=w):n._=w,w.VERSION="1.4.3";var A=w.each=w.forEach=function(n,t,e){if(null!=n)if(s&&n.forEach===s)n.forEach(t,e);else if(n.length===+n.length){for(var u=0,i=n.length;i>u;u++)if(t.call(e,n[u],u,n)===r)return}else for(var a in n)if(w.has(n,a)&&t.call(e,n[a],a,n)===r)return};w.map=w.collect=function(n,t,r){var e=[];return null==n?e:p&&n.map===p?n.map(t,r):(A(n,function(n,u,i){e[e.length]=t.call(r,n,u,i)}),e)};var O="Reduce of empty array with no initial value";w.reduce=w.foldl=w.inject=function(n,t,r,e){var u=arguments.length>2;if(null==n&&(n=[]),v&&n.reduce===v)return e&&(t=w.bind(t,e)),u?n.reduce(t,r):n.reduce(t);if(A(n,function(n,i,a){u?r=t.call(e,r,n,i,a):(r=n,u=!0)}),!u)throw new TypeError(O);return r},w.reduceRight=w.foldr=function(n,t,r,e){var u=arguments.length>2;if(null==n&&(n=[]),h&&n.reduceRight===h)return e&&(t=w.bind(t,e)),u?n.reduceRight(t,r):n.reduceRight(t);var i=n.length;if(i!==+i){var a=w.keys(n);i=a.length}if(A(n,function(o,c,l){c=a?a[--i]:--i,u?r=t.call(e,r,n[c],c,l):(r=n[c],u=!0)}),!u)throw new TypeError(O);return r},w.find=w.detect=function(n,t,r){var e;return E(n,function(n,u,i){return t.call(r,n,u,i)?(e=n,!0):void 0}),e},w.filter=w.select=function(n,t,r){var e=[];return null==n?e:g&&n.filter===g?n.filter(t,r):(A(n,function(n,u,i){t.call(r,n,u,i)&&(e[e.length]=n)}),e)},w.reject=function(n,t,r){return w.filter(n,function(n,e,u){return!t.call(r,n,e,u)},r)},w.every=w.all=function(n,t,e){t||(t=w.identity);var u=!0;return null==n?u:d&&n.every===d?n.every(t,e):(A(n,function(n,i,a){return(u=u&&t.call(e,n,i,a))?void 0:r}),!!u)};var E=w.some=w.any=function(n,t,e){t||(t=w.identity);var u=!1;return null==n?u:m&&n.some===m?n.some(t,e):(A(n,function(n,i,a){return u||(u=t.call(e,n,i,a))?r:void 0}),!!u)};w.contains=w.include=function(n,t){return null==n?!1:y&&n.indexOf===y?-1!=n.indexOf(t):E(n,function(n){return n===t})},w.invoke=function(n,t){var r=o.call(arguments,2);return w.map(n,function(n){return(w.isFunction(t)?t:n[t]).apply(n,r)})},w.pluck=function(n,t){return w.map(n,function(n){return n[t]})},w.where=function(n,t){return w.isEmpty(t)?[]:w.filter(n,function(n){for(var r in t)if(t[r]!==n[r])return!1;return!0})},w.max=function(n,t,r){if(!t&&w.isArray(n)&&n[0]===+n[0]&&65535>n.length)return Math.max.apply(Math,n);if(!t&&w.isEmpty(n))return-1/0;var e={computed:-1/0,value:-1/0};return A(n,function(n,u,i){var a=t?t.call(r,n,u,i):n;a>=e.computed&&(e={value:n,computed:a})}),e.value},w.min=function(n,t,r){if(!t&&w.isArray(n)&&n[0]===+n[0]&&65535>n.length)return Math.min.apply(Math,n);if(!t&&w.isEmpty(n))return 1/0;var e={computed:1/0,value:1/0};return A(n,function(n,u,i){var a=t?t.call(r,n,u,i):n;e.computed>a&&(e={value:n,computed:a})}),e.value},w.shuffle=function(n){var t,r=0,e=[];return A(n,function(n){t=w.random(r++),e[r-1]=e[t],e[t]=n}),e};var F=function(n){return w.isFunction(n)?n:function(t){return t[n]}};w.sortBy=function(n,t,r){var e=F(t);return w.pluck(w.map(n,function(n,t,u){return{value:n,index:t,criteria:e.call(r,n,t,u)}}).sort(function(n,t){var r=n.criteria,e=t.criteria;if(r!==e){if(r>e||void 0===r)return 1;if(e>r||void 0===e)return-1}return n.index<t.index?-1:1}),"value")};var k=function(n,t,r,e){var u={},i=F(t||w.identity);return A(n,function(t,a){var o=i.call(r,t,a,n);e(u,o,t)}),u};w.groupBy=function(n,t,r){return k(n,t,r,function(n,t,r){(w.has(n,t)?n[t]:n[t]=[]).push(r)})},w.countBy=function(n,t,r){return k(n,t,r,function(n,t){w.has(n,t)||(n[t]=0),n[t]++})},w.sortedIndex=function(n,t,r,e){r=null==r?w.identity:F(r);for(var u=r.call(e,t),i=0,a=n.length;a>i;){var o=i+a>>>1;u>r.call(e,n[o])?i=o+1:a=o}return i},w.toArray=function(n){return n?w.isArray(n)?o.call(n):n.length===+n.length?w.map(n,w.identity):w.values(n):[]},w.size=function(n){return null==n?0:n.length===+n.length?n.length:w.keys(n).length},w.first=w.head=w.take=function(n,t,r){return null==n?void 0:null==t||r?n[0]:o.call(n,0,t)},w.initial=function(n,t,r){return o.call(n,0,n.length-(null==t||r?1:t))},w.last=function(n,t,r){return null==n?void 0:null==t||r?n[n.length-1]:o.call(n,Math.max(n.length-t,0))},w.rest=w.tail=w.drop=function(n,t,r){return o.call(n,null==t||r?1:t)},w.compact=function(n){return w.filter(n,w.identity)};var R=function(n,t,r){return A(n,function(n){w.isArray(n)?t?a.apply(r,n):R(n,t,r):r.push(n)}),r};w.flatten=function(n,t){return R(n,t,[])},w.without=function(n){return w.difference(n,o.call(arguments,1))},w.uniq=w.unique=function(n,t,r,e){w.isFunction(t)&&(e=r,r=t,t=!1);var u=r?w.map(n,r,e):n,i=[],a=[];return A(u,function(r,e){(t?e&&a[a.length-1]===r:w.contains(a,r))||(a.push(r),i.push(n[e]))}),i},w.union=function(){return w.uniq(c.apply(e,arguments))},w.intersection=function(n){var t=o.call(arguments,1);return w.filter(w.uniq(n),function(n){return w.every(t,function(t){return w.indexOf(t,n)>=0})})},w.difference=function(n){var t=c.apply(e,o.call(arguments,1));return w.filter(n,function(n){return!w.contains(t,n)})},w.zip=function(){for(var n=o.call(arguments),t=w.max(w.pluck(n,"length")),r=Array(t),e=0;t>e;e++)r[e]=w.pluck(n,""+e);return r},w.object=function(n,t){if(null==n)return{};for(var r={},e=0,u=n.length;u>e;e++)t?r[n[e]]=t[e]:r[n[e][0]]=n[e][1];return r},w.indexOf=function(n,t,r){if(null==n)return-1;var e=0,u=n.length;if(r){if("number"!=typeof r)return e=w.sortedIndex(n,t),n[e]===t?e:-1;e=0>r?Math.max(0,u+r):r}if(y&&n.indexOf===y)return n.indexOf(t,r);for(;u>e;e++)if(n[e]===t)return e;return-1},w.lastIndexOf=function(n,t,r){if(null==n)return-1;var e=null!=r;if(b&&n.lastIndexOf===b)return e?n.lastIndexOf(t,r):n.lastIndexOf(t);for(var u=e?r:n.length;u--;)if(n[u]===t)return u;return-1},w.range=function(n,t,r){1>=arguments.length&&(t=n||0,n=0),r=arguments[2]||1;for(var e=Math.max(Math.ceil((t-n)/r),0),u=0,i=Array(e);e>u;)i[u++]=n,n+=r;return i};var I=function(){};w.bind=function(n,t){var r,e;if(n.bind===j&&j)return j.apply(n,o.call(arguments,1));if(!w.isFunction(n))throw new TypeError;return r=o.call(arguments,2),e=function(){if(!(this instanceof e))return n.apply(t,r.concat(o.call(arguments)));I.prototype=n.prototype;var u=new I;I.prototype=null;var i=n.apply(u,r.concat(o.call(arguments)));return Object(i)===i?i:u}},w.bindAll=function(n){var t=o.call(arguments,1);return 0==t.length&&(t=w.functions(n)),A(t,function(t){n[t]=w.bind(n[t],n)}),n},w.memoize=function(n,t){var r={};return t||(t=w.identity),function(){var e=t.apply(this,arguments);return w.has(r,e)?r[e]:r[e]=n.apply(this,arguments)}},w.delay=function(n,t){var r=o.call(arguments,2);return setTimeout(function(){return n.apply(null,r)},t)},w.defer=function(n){return w.delay.apply(w,[n,1].concat(o.call(arguments,1)))},w.throttle=function(n,t){var r,e,u,i,a=0,o=function(){a=new Date,u=null,i=n.apply(r,e)};return function(){var c=new Date,l=t-(c-a);return r=this,e=arguments,0>=l?(clearTimeout(u),u=null,a=c,i=n.apply(r,e)):u||(u=setTimeout(o,l)),i}},w.debounce=function(n,t,r){var e,u;return function(){var i=this,a=arguments,o=function(){e=null,r||(u=n.apply(i,a))},c=r&&!e;return clearTimeout(e),e=setTimeout(o,t),c&&(u=n.apply(i,a)),u}},w.once=function(n){var t,r=!1;return function(){return r?t:(r=!0,t=n.apply(this,arguments),n=null,t)}},w.wrap=function(n,t){return function(){var r=[n];return a.apply(r,arguments),t.apply(this,r)}},w.compose=function(){var n=arguments;return function(){for(var t=arguments,r=n.length-1;r>=0;r--)t=[n[r].apply(this,t)];return t[0]}},w.after=function(n,t){return 0>=n?t():function(){return 1>--n?t.apply(this,arguments):void 0}},w.keys=_||function(n){if(n!==Object(n))throw new TypeError("Invalid object");var t=[];for(var r in n)w.has(n,r)&&(t[t.length]=r);return t},w.values=function(n){var t=[];for(var r in n)w.has(n,r)&&t.push(n[r]);return t},w.pairs=function(n){var t=[];for(var r in n)w.has(n,r)&&t.push([r,n[r]]);return t},w.invert=function(n){var t={};for(var r in n)w.has(n,r)&&(t[n[r]]=r);return t},w.functions=w.methods=function(n){var t=[];for(var r in n)w.isFunction(n[r])&&t.push(r);return t.sort()},w.extend=function(n){return A(o.call(arguments,1),function(t){if(t)for(var r in t)n[r]=t[r]}),n},w.pick=function(n){var t={},r=c.apply(e,o.call(arguments,1));return A(r,function(r){r in n&&(t[r]=n[r])}),t},w.omit=function(n){var t={},r=c.apply(e,o.call(arguments,1));for(var u in n)w.contains(r,u)||(t[u]=n[u]);return t},w.defaults=function(n){return A(o.call(arguments,1),function(t){if(t)for(var r in t)null==n[r]&&(n[r]=t[r])}),n},w.clone=function(n){return w.isObject(n)?w.isArray(n)?n.slice():w.extend({},n):n},w.tap=function(n,t){return t(n),n};var S=function(n,t,r,e){if(n===t)return 0!==n||1/n==1/t;if(null==n||null==t)return n===t;n instanceof w&&(n=n._wrapped),t instanceof w&&(t=t._wrapped);var u=l.call(n);if(u!=l.call(t))return!1;switch(u){case"[object String]":return n==t+"";case"[object Number]":return n!=+n?t!=+t:0==n?1/n==1/t:n==+t;case"[object Date]":case"[object Boolean]":return+n==+t;case"[object RegExp]":return n.source==t.source&&n.global==t.global&&n.multiline==t.multiline&&n.ignoreCase==t.ignoreCase}if("object"!=typeof n||"object"!=typeof t)return!1;for(var i=r.length;i--;)if(r[i]==n)return e[i]==t;r.push(n),e.push(t);var a=0,o=!0;if("[object Array]"==u){if(a=n.length,o=a==t.length)for(;a--&&(o=S(n[a],t[a],r,e)););}else{var c=n.constructor,f=t.constructor;if(c!==f&&!(w.isFunction(c)&&c instanceof c&&w.isFunction(f)&&f instanceof f))return!1;for(var s in n)if(w.has(n,s)&&(a++,!(o=w.has(t,s)&&S(n[s],t[s],r,e))))break;if(o){for(s in t)if(w.has(t,s)&&!a--)break;o=!a}}return r.pop(),e.pop(),o};w.isEqual=function(n,t){return S(n,t,[],[])},w.isEmpty=function(n){if(null==n)return!0;if(w.isArray(n)||w.isString(n))return 0===n.length;for(var t in n)if(w.has(n,t))return!1;return!0},w.isElement=function(n){return!(!n||1!==n.nodeType)},w.isArray=x||function(n){return"[object Array]"==l.call(n)},w.isObject=function(n){return n===Object(n)},A(["Arguments","Function","String","Number","Date","RegExp"],function(n){w["is"+n]=function(t){return l.call(t)=="[object "+n+"]"}}),w.isArguments(arguments)||(w.isArguments=function(n){return!(!n||!w.has(n,"callee"))}),w.isFunction=function(n){return"function"==typeof n},w.isFinite=function(n){return isFinite(n)&&!isNaN(parseFloat(n))},w.isNaN=function(n){return w.isNumber(n)&&n!=+n},w.isBoolean=function(n){return n===!0||n===!1||"[object Boolean]"==l.call(n)},w.isNull=function(n){return null===n},w.isUndefined=function(n){return void 0===n},w.has=function(n,t){return f.call(n,t)},w.noConflict=function(){return n._=t,this},w.identity=function(n){return n},w.times=function(n,t,r){for(var e=Array(n),u=0;n>u;u++)e[u]=t.call(r,u);return e},w.random=function(n,t){return null==t&&(t=n,n=0),n+(0|Math.random()*(t-n+1))};var T={escape:{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#x27;","/":"&#x2F;"}};T.unescape=w.invert(T.escape);var M={escape:RegExp("["+w.keys(T.escape).join("")+"]","g"),unescape:RegExp("("+w.keys(T.unescape).join("|")+")","g")};w.each(["escape","unescape"],function(n){w[n]=function(t){return null==t?"":(""+t).replace(M[n],function(t){return T[n][t]})}}),w.result=function(n,t){if(null==n)return null;var r=n[t];return w.isFunction(r)?r.call(n):r},w.mixin=function(n){A(w.functions(n),function(t){var r=w[t]=n[t];w.prototype[t]=function(){var n=[this._wrapped];return a.apply(n,arguments),z.call(this,r.apply(w,n))}})};var N=0;w.uniqueId=function(n){var t=""+ ++N;return n?n+t:t},w.templateSettings={evaluate:/<%([\s\S]+?)%>/g,interpolate:/<%=([\s\S]+?)%>/g,escape:/<%-([\s\S]+?)%>/g};var q=/(.)^/,B={"'":"'","\\":"\\","\r":"r","\n":"n","	":"t","\u2028":"u2028","\u2029":"u2029"},D=/\\|'|\r|\n|\t|\u2028|\u2029/g;w.template=function(n,t,r){r=w.defaults({},r,w.templateSettings);var e=RegExp([(r.escape||q).source,(r.interpolate||q).source,(r.evaluate||q).source].join("|")+"|$","g"),u=0,i="__p+='";n.replace(e,function(t,r,e,a,o){return i+=n.slice(u,o).replace(D,function(n){return"\\"+B[n]}),r&&(i+="'+\n((__t=("+r+"))==null?'':_.escape(__t))+\n'"),e&&(i+="'+\n((__t=("+e+"))==null?'':__t)+\n'"),a&&(i+="';\n"+a+"\n__p+='"),u=o+t.length,t}),i+="';\n",r.variable||(i="with(obj||{}){\n"+i+"}\n"),i="var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};\n"+i+"return __p;\n";try{var a=Function(r.variable||"obj","_",i)}catch(o){throw o.source=i,o}if(t)return a(t,w);var c=function(n){return a.call(this,n,w)};return c.source="function("+(r.variable||"obj")+"){\n"+i+"}",c},w.chain=function(n){return w(n).chain()};var z=function(n){return this._chain?w(n).chain():n};w.mixin(w),A(["pop","push","reverse","shift","sort","splice","unshift"],function(n){var t=e[n];w.prototype[n]=function(){var r=this._wrapped;return t.apply(r,arguments),"shift"!=n&&"splice"!=n||0!==r.length||delete r[0],z.call(this,r)}}),A(["concat","join","slice"],function(n){var t=e[n];w.prototype[n]=function(){return z.call(this,t.apply(this._wrapped,arguments))}}),w.extend(w.prototype,{chain:function(){return this._chain=!0,this},value:function(){return this._wrapped}})}).call(this);
+(function(){var n=this,t=n._,r={},e=Array.prototype,u=Object.prototype,i=Function.prototype,a=e.push,o=e.slice,c=e.concat,l=u.toString,f=u.hasOwnProperty,s=e.forEach,p=e.map,v=e.reduce,h=e.reduceRight,g=e.filter,d=e.every,m=e.some,y=e.indexOf,b=e.lastIndexOf,x=Array.isArray,_=Object.keys,j=i.bind,w=function(n){return n instanceof w?n:this instanceof w?(this._wrapped=n,void 0):new w(n)};"undefined"!=typeof exports?("undefined"!=typeof module&&module.exports&&(exports=module.exports=w),exports._=w):n._=w,w.VERSION="1.4.3";var A=w.each=w.forEach=function(n,t,e){if(null!=n)if(s&&n.forEach===s)n.forEach(t,e);else if(n.length===+n.length){for(var u=0,i=n.length;i>u;u++)if(t.call(e,n[u],u,n)===r)return}else for(var a in n)if(w.has(n,a)&&t.call(e,n[a],a,n)===r)return};w.map=w.collect=function(n,t,r){var e=[];return null==n?e:p&&n.map===p?n.map(t,r):(A(n,function(n,u,i){e[e.length]=t.call(r,n,u,i)}),e)};var O="Reduce of empty array with no initial value";w.reduce=w.foldl=w.inject=function(n,t,r,e){var u=arguments.length>2;if(null==n&&(n=[]),v&&n.reduce===v)return e&&(t=w.bind(t,e)),u?n.reduce(t,r):n.reduce(t);if(A(n,function(n,i,a){u?r=t.call(e,r,n,i,a):(r=n,u=!0)}),!u)throw new TypeError(O);return r},w.reduceRight=w.foldr=function(n,t,r,e){var u=arguments.length>2;if(null==n&&(n=[]),h&&n.reduceRight===h)return e&&(t=w.bind(t,e)),u?n.reduceRight(t,r):n.reduceRight(t);var i=n.length;if(i!==+i){var a=w.keys(n);i=a.length}if(A(n,function(o,c,l){c=a?a[--i]:--i,u?r=t.call(e,r,n[c],c,l):(r=n[c],u=!0)}),!u)throw new TypeError(O);return r},w.find=w.detect=function(n,t,r){var e;return E(n,function(n,u,i){return t.call(r,n,u,i)?(e=n,!0):void 0}),e},w.filter=w.select=function(n,t,r){var e=[];return null==n?e:g&&n.filter===g?n.filter(t,r):(A(n,function(n,u,i){t.call(r,n,u,i)&&(e[e.length]=n)}),e)},w.reject=function(n,t,r){return w.filter(n,function(n,e,u){return!t.call(r,n,e,u)},r)},w.every=w.all=function(n,t,e){t||(t=w.identity);var u=!0;return null==n?u:d&&n.every===d?n.every(t,e):(A(n,function(n,i,a){return(u=u&&t.call(e,n,i,a))?void 0:r}),!!u)};var E=w.some=w.any=function(n,t,e){t||(t=w.identity);var u=!1;return null==n?u:m&&n.some===m?n.some(t,e):(A(n,function(n,i,a){return u||(u=t.call(e,n,i,a))?r:void 0}),!!u)};w.contains=w.include=function(n,t){return null==n?!1:y&&n.indexOf===y?-1!=n.indexOf(t):E(n,function(n){return n===t})},w.invoke=function(n,t){var r=o.call(arguments,2);return w.map(n,function(n){return(w.isFunction(t)?t:n[t]).apply(n,r)})},w.pluck=function(n,t){return w.map(n,function(n){return n[t]})},w.where=function(n,t){return w.isEmpty(t)?[]:w.filter(n,function(n){for(var r in t)if(t[r]!==n[r])return!1;return!0})},w.max=function(n,t,r){if(!t&&w.isArray(n)&&n[0]===+n[0]&&65535>n.length)return Math.max.apply(Math,n);if(!t&&w.isEmpty(n))return-1/0;var e={computed:-1/0,value:-1/0};return A(n,function(n,u,i){var a=t?t.call(r,n,u,i):n;a>=e.computed&&(e={value:n,computed:a})}),e.value},w.min=function(n,t,r){if(!t&&w.isArray(n)&&n[0]===+n[0]&&65535>n.length)return Math.min.apply(Math,n);if(!t&&w.isEmpty(n))return 1/0;var e={computed:1/0,value:1/0};return A(n,function(n,u,i){var a=t?t.call(r,n,u,i):n;e.computed>a&&(e={value:n,computed:a})}),e.value},w.shuffle=function(n){var t,r=0,e=[];return A(n,function(n){t=w.random(r++),e[r-1]=e[t],e[t]=n}),e};var F=function(n){return w.isFunction(n)?n:function(t){return t[n]}};w.sortBy=function(n,t,r){var e=F(t);return w.pluck(w.map(n,function(n,t,u){return{value:n,index:t,criteria:e.call(r,n,t,u)}}).sort(function(n,t){var r=n.criteria,e=t.criteria;if(r!==e){if(r>e||void 0===r)return 1;if(e>r||void 0===e)return-1}return n.index<t.index?-1:1}),"value")};var k=function(n,t,r,e){var u={},i=F(t||w.identity);return A(n,function(t,a){var o=i.call(r,t,a,n);e(u,o,t)}),u};w.groupBy=function(n,t,r){return k(n,t,r,function(n,t,r){(w.has(n,t)?n[t]:n[t]=[]).push(r)})},w.countBy=function(n,t,r){return k(n,t,r,function(n,t){w.has(n,t)||(n[t]=0),n[t]++})},w.sortedIndex=function(n,t,r,e){r=null==r?w.identity:F(r);for(var u=r.call(e,t),i=0,a=n.length;a>i;){var o=i+a>>>1;u>r.call(e,n[o])?i=o+1:a=o}return i},w.toArray=function(n){return n?w.isArray(n)?o.call(n):n.length===+n.length?w.map(n,w.identity):w.values(n):[]},w.size=function(n){return null==n?0:n.length===+n.length?n.length:w.keys(n).length},w.first=w.head=w.take=function(n,t,r){return null==n?void 0:null==t||r?n[0]:o.call(n,0,t)},w.initial=function(n,t,r){return o.call(n,0,n.length-(null==t||r?1:t))},w.last=function(n,t,r){return null==n?void 0:null==t||r?n[n.length-1]:o.call(n,Math.max(n.length-t,0))},w.rest=w.tail=w.drop=function(n,t,r){return o.call(n,null==t||r?1:t)},w.compact=function(n){return w.filter(n,w.identity)};var R=function(n,t,r){return A(n,function(n){w.isArray(n)?t?a.apply(r,n):R(n,t,r):r.push(n)}),r};w.flatten=function(n,t){return R(n,t,[])},w.without=function(n){return w.difference(n,o.call(arguments,1))},w.uniq=w.unique=function(n,t,r,e){w.isFunction(t)&&(e=r,r=t,t=!1);var u=r?w.map(n,r,e):n,i=[],a=[];return A(u,function(r,e){(t?e&&a[a.length-1]===r:w.contains(a,r))||(a.push(r),i.push(n[e]))}),i},w.union=function(){return w.uniq(c.apply(e,arguments))},w.intersection=function(n){var t=o.call(arguments,1);return w.filter(w.uniq(n),function(n){return w.every(t,function(t){return w.indexOf(t,n)>=0})})},w.difference=function(n){var t=c.apply(e,o.call(arguments,1));return w.filter(n,function(n){return!w.contains(t,n)})},w.zip=function(){for(var n=o.call(arguments),t=w.max(w.pluck(n,"length")),r=Array(t),e=0;t>e;e++)r[e]=w.pluck(n,""+e);return r},w.object=function(n,t){if(null==n)return{};for(var r={},e=0,u=n.length;u>e;e++)t?r[n[e]]=t[e]:r[n[e][0]]=n[e][1];return r},w.indexOf=function(n,t,r){if(null==n)return-1;var e=0,u=n.length;if(r){if("number"!=typeof r)return e=w.sortedIndex(n,t),n[e]===t?e:-1;e=0>r?Math.max(0,u+r):r}if(y&&n.indexOf===y)return n.indexOf(t,r);for(;u>e;e++)if(n[e]===t)return e;return-1},w.lastIndexOf=function(n,t,r){if(null==n)return-1;var e=null!=r;if(b&&n.lastIndexOf===b)return e?n.lastIndexOf(t,r):n.lastIndexOf(t);for(var u=e?r:n.length;u--;)if(n[u]===t)return u;return-1},w.range=function(n,t,r){1>=arguments.length&&(t=n||0,n=0),r=arguments[2]||1;for(var e=Math.max(Math.ceil((t-n)/r),0),u=0,i=Array(e);e>u;)i[u++]=n,n+=r;return i};var I=function(){};w.bind=function(n,t){var r,e;if(n.bind===j&&j)return j.apply(n,o.call(arguments,1));if(!w.isFunction(n))throw new TypeError;return r=o.call(arguments,2),e=function(){if(!(this instanceof e))return n.apply(t,r.concat(o.call(arguments)));I.prototype=n.prototype;var u=new I;I.prototype=null;var i=n.apply(u,r.concat(o.call(arguments)));return Object(i)===i?i:u}},w.bindAll=function(n){var t=o.call(arguments,1);return 0==t.length&&(t=w.functions(n)),A(t,function(t){n[t]=w.bind(n[t],n)}),n},w.memoize=function(n,t){var r={};return t||(t=w.identity),function(){var e=t.apply(this,arguments);return w.has(r,e)?r[e]:r[e]=n.apply(this,arguments)}},w.delay=function(n,t){var r=o.call(arguments,2);return setTimeout(function(){return n.apply(null,r)},t)},w.defer=function(n){return w.delay.apply(w,[n,1].concat(o.call(arguments,1)))},w.throttle=function(n,t){var r,e,u,i,a=0,o=function(){a=new Date,u=null,i=n.apply(r,e)};return function(){var c=new Date,l=t-(c-a);return r=this,e=arguments,0>=l?(clearTimeout(u),u=null,a=c,i=n.apply(r,e)):u||(u=setTimeout(o,l)),i}},w.debounce=function(n,t,r){var e,u;return function(){var i=this,a=arguments,o=function(){e=null,r||(u=n.apply(i,a))},c=r&&!e;return clearTimeout(e),e=setTimeout(o,t),c&&(u=n.apply(i,a)),u}},w.once=function(n){var t,r=!1;return function(){return r?t:(r=!0,t=n.apply(this,arguments),n=null,t)}},w.wrap=function(n,t){return function(){var r=[n];return a.apply(r,arguments),t.apply(this,r)}},w.compose=function(){var n=arguments;return function(){for(var t=arguments,r=n.length-1;r>=0;r--)t=[n[r].apply(this,t)];return t[0]}},w.after=function(n,t){return 0>=n?t():function(){return 1>--n?t.apply(this,arguments):void 0}},w.keys=_||function(n){if(n!==Object(n))throw new TypeError("Invalid object");var t=[];for(var r in n)w.has(n,r)&&(t[t.length]=r);return t},w.values=function(n){var t=[];for(var r in n)w.has(n,r)&&t.push(n[r]);return t},w.pairs=function(n){var t=[];for(var r in n)w.has(n,r)&&t.push([r,n[r]]);return t},w.invert=function(n){var t={};for(var r in n)w.has(n,r)&&(t[n[r]]=r);return t},w.functions=w.methods=function(n){var t=[];for(var r in n)w.isFunction(n[r])&&t.push(r);return t.sort()},w.extend=function(n){return A(o.call(arguments,1),function(t){if(t)for(var r in t)n[r]=t[r]}),n},w.pick=function(n){var t={},r=c.apply(e,o.call(arguments,1));return A(r,function(r){r in n&&(t[r]=n[r])}),t},w.omit=function(n){var t={},r=c.apply(e,o.call(arguments,1));for(var u in n)w.contains(r,u)||(t[u]=n[u]);return t},w.defaults=function(n){return A(o.call(arguments,1),function(t){if(t)for(var r in t)null==n[r]&&(n[r]=t[r])}),n},w.clone=function(n){return w.isObject(n)?w.isArray(n)?n.slice():w.extend({},n):n},w.tap=function(n,t){return t(n),n};var S=function(n,t,r,e){if(n===t)return 0!==n||1/n==1/t;if(null==n||null==t)return n===t;n instanceof w&&(n=n._wrapped),t instanceof w&&(t=t._wrapped);var u=l.call(n);if(u!=l.call(t))return!1;switch(u){case"[object String]":return n==t+"";case"[object Number]":return n!=+n?t!=+t:0==n?1/n==1/t:n==+t;case"[object Date]":case"[object Boolean]":return+n==+t;case"[object RegExp]":return n.source==t.source&&n.global==t.global&&n.multiline==t.multiline&&n.ignoreCase==t.ignoreCase}if("object"!=typeof n||"object"!=typeof t)return!1;for(var i=r.length;i--;)if(r[i]==n)return e[i]==t;r.push(n),e.push(t);var a=0,o=!0;if("[object Array]"==u){if(a=n.length,o=a==t.length)for(;a--&&(o=S(n[a],t[a],r,e)););}else{var c=n.constructor,f=t.constructor;if(c!==f&&!(w.isFunction(c)&&c instanceof c&&w.isFunction(f)&&f instanceof f))return!1;for(var s in n)if(w.has(n,s)&&(a++,!(o=w.has(t,s)&&S(n[s],t[s],r,e))))break;if(o){for(s in t)if(w.has(t,s)&&!a--)break;o=!a}}return r.pop(),e.pop(),o};w.isEqual=function(n,t){return S(n,t,[],[])},w.isEmpty=function(n){if(null==n)return!0;if(w.isArray(n)||w.isString(n))return 0===n.length;for(var t in n)if(w.has(n,t))return!1;return!0},w.isElement=function(n){return!(!n||1!==n.nodeType)},w.isArray=x||function(n){return"[object Array]"==l.call(n)},w.isObject=function(n){return n===Object(n)},A(["Arguments","Function","String","Number","Date","RegExp"],function(n){w["is"+n]=function(t){return l.call(t)=="[object "+n+"]"}}),w.isArguments(arguments)||(w.isArguments=function(n){return!(!n||!w.has(n,"callee"))}),w.isFunction=function(n){return"function"==typeof n},w.isFinite=function(n){return isFinite(n)&&!isNaN(parseFloat(n))},w.isNaN=function(n){return w.isNumber(n)&&n!=+n},w.isBoolean=function(n){return n===!0||n===!1||"[object Boolean]"==l.call(n)},w.isNull=function(n){return null===n},w.isUndefined=function(n){return void 0===n},w.has=function(n,t){return f.call(n,t)},w.noConflict=function(){return n._=t,this},w.identity=function(n){return n},w.times=function(n,t,r){for(var e=Array(n),u=0;n>u;u++)e[u]=t.call(r,u);return e},w.random=function(n,t){return null==t&&(t=n,n=0),n+(0|Math.random()*(t-n+1))};var T={escape:{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#x27;","/":"&#x2F;"}};T.unescape=w.invert(T.escape);var M={escape:RegExp("["+w.keys(T.escape).join("")+"]","g"),unescape:RegExp("("+w.keys(T.unescape).join("|")+")","g")};w.each(["escape","unescape"],function(n){w[n]=function(t){return null==t?"":(""+t).replace(M[n],function(t){return T[n][t]})}}),w.result=function(n,t){if(null==n)return null;var r=n[t];return w.isFunction(r)?r.call(n):r},w.mixin=function(n){A(w.functions(n),function(t){var r=w[t]=n[t];w.prototype[t]=function(){var n=[this._wrapped];return a.apply(n,arguments),z.call(this,r.apply(w,n))}})};var N=0;w.uniqueId=function(n){var t=""+ ++N;return n?n+t:t},w.templateSettings={evaluate:/<%([\s\S]+?)%>/g,interpolate:/<%=([\s\S]+?)%>/g,escape:/<%-([\s\S]+?)%>/g};var q=/(.)^/,B={"'":"'","\\":"\\","\r":"r","\n":"n"," ":"t","\u2028":"u2028","\u2029":"u2029"},D=/\\|'|\r|\n|\t|\u2028|\u2029/g;w.template=function(n,t,r){r=w.defaults({},r,w.templateSettings);var e=RegExp([(r.escape||q).source,(r.interpolate||q).source,(r.evaluate||q).source].join("|")+"|$","g"),u=0,i="__p+='";n.replace(e,function(t,r,e,a,o){return i+=n.slice(u,o).replace(D,function(n){return"\\"+B[n]}),r&&(i+="'+\n((__t=("+r+"))==null?'':_.escape(__t))+\n'"),e&&(i+="'+\n((__t=("+e+"))==null?'':__t)+\n'"),a&&(i+="';\n"+a+"\n__p+='"),u=o+t.length,t}),i+="';\n",r.variable||(i="with(obj||{}){\n"+i+"}\n"),i="var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};\n"+i+"return __p;\n";try{var a=Function(r.variable||"obj","_",i)}catch(o){throw o.source=i,o}if(t)return a(t,w);var c=function(n){return a.call(this,n,w)};return c.source="function("+(r.variable||"obj")+"){\n"+i+"}",c},w.chain=function(n){return w(n).chain()};var z=function(n){return this._chain?w(n).chain():n};w.mixin(w),A(["pop","push","reverse","shift","sort","splice","unshift"],function(n){var t=e[n];w.prototype[n]=function(){var r=this._wrapped;return t.apply(r,arguments),"shift"!=n&&"splice"!=n||0!==r.length||delete r[0],z.call(this,r)}}),A(["concat","join","slice"],function(n){var t=e[n];w.prototype[n]=function(){return z.call(this,t.apply(this._wrapped,arguments))}}),w.extend(w.prototype,{chain:function(){return this._chain=!0,this},value:function(){return this._wrapped}})}).call(this);
 
 // Backbone.js 0.9.9
 
@@ -468,776 +468,766 @@ if (typeof(module) === 'object') {
 }
 
 var utils = {
-	/**
-	 * Get a URL parameter from the current windows URL.
-	 * Courtesy Paul Oppenheim: http://stackoverflow.com/questions/1403888/get-url-parameter-with-jquery
-	 * @param name the parameter to retrieve
-	 * @return string the url parameter's value, if any
-	**/
-	_getURLParameter : function (name) {
-	    param = (new RegExp(name + '=' + '(.+?)(&|$)').exec(location.search) || ['', null])[1];
+    /**
+     * Get a URL parameter from the current windows URL.
+     * Courtesy Paul Oppenheim: http://stackoverflow.com/questions/1403888/get-url-parameter-with-jquery
+     * @param name the parameter to retrieve
+     * @return string the url parameter's value, if any
+    **/
+    _getURLParameter : function (name) {
+        param = (new RegExp(name + '=' + '(.+?)(&|$)').exec(location.search) || ['', null])[1];
 
-	    if (param) {
-	        return decodeURIComponent(param);
-	    } else {
-	        return null;
-	    }
-	},
+        if (param) {
+            return decodeURIComponent(param);
+        } else {
+            return null;
+        }
+    },
 
-	/**
-	 * This awesome function created by Rob W
-	 * http://stackoverflow.com/users/938089/rob-w
-	 * @param input          Required HTMLElement with `value` attribute
-	 * @param selectionStart Optional number: Start offset. Default 0
-	 * @param selectionEnd   Optional number: End offset. Default selectionStart
-	 * @param debug          Optional boolean. If true, the created test layer will not be removed.
-	 */
-	getTextBoundingRect : function (input, selectionStart, selectionEnd, debug) {
-		    // Basic parameter validation
-		    if(!input || !('value' in input)) return input;
-		    if(typeof selectionStart == "string") selectionStart = parseFloat(selectionStart);
-		    if(typeof selectionStart != "number" || isNaN(selectionStart)) {
-		        selectionStart = 0;
-		    }
-		    if(selectionStart < 0) selectionStart = 0;
-		    else selectionStart = Math.min(input.value.length, selectionStart);
-		    if(typeof selectionEnd == "string") selectionEnd = parseFloat(selectionEnd);
-		    if(typeof selectionEnd != "number" || isNaN(selectionEnd) || selectionEnd < selectionStart) {
-		        selectionEnd = selectionStart;
-		    }
-		    if (selectionEnd < 0) selectionEnd = 0;
-		    else selectionEnd = Math.min(input.value.length, selectionEnd);
+    /**
+     * This awesome function created by Rob W
+     * http://stackoverflow.com/users/938089/rob-w
+     * @param input          Required HTMLElement with `value` attribute
+     * @param selectionStart Optional number: Start offset. Default 0
+     * @param selectionEnd   Optional number: End offset. Default selectionStart
+     * @param debug          Optional boolean. If true, the created test layer will not be removed.
+     */
+    getTextBoundingRect : function (input, selectionStart, selectionEnd, debug) {
+            // Basic parameter validation
+            if(!input || !('value' in input)) return input;
+            if(typeof selectionStart == "string") selectionStart = parseFloat(selectionStart);
+            if(typeof selectionStart != "number" || isNaN(selectionStart)) {
+                selectionStart = 0;
+            }
+            if(selectionStart < 0) selectionStart = 0;
+            else selectionStart = Math.min(input.value.length, selectionStart);
+            if(typeof selectionEnd == "string") selectionEnd = parseFloat(selectionEnd);
+            if(typeof selectionEnd != "number" || isNaN(selectionEnd) || selectionEnd < selectionStart) {
+                selectionEnd = selectionStart;
+            }
+            if (selectionEnd < 0) selectionEnd = 0;
+            else selectionEnd = Math.min(input.value.length, selectionEnd);
 
-		    // If available (thus IE), use the createTextRange method
-		    if (typeof input.createTextRange == "function") {
-		        var range = input.createTextRange();
-		        range.collapse(true);
-		        range.moveStart('character', selectionStart);
-		        range.moveEnd('character', selectionEnd - selectionStart);
-		        return range.getBoundingClientRect();
-		    }
-		    // createTextRange is not supported, create a fake text range
-		    var offset = getInputOffset(),
-		        topPos = offset.top,
-		        leftPos = offset.left,
-		        width = getInputCSS('width', true),
-		        height = getInputCSS('height', true);
+            // If available (thus IE), use the createTextRange method
+            if (typeof input.createTextRange == "function") {
+                var range = input.createTextRange();
+                range.collapse(true);
+                range.moveStart('character', selectionStart);
+                range.moveEnd('character', selectionEnd - selectionStart);
+                return range.getBoundingClientRect();
+            }
+            // createTextRange is not supported, create a fake text range
+            var offset = getInputOffset(),
+                topPos = offset.top,
+                leftPos = offset.left,
+                width = getInputCSS('width', true),
+                height = getInputCSS('height', true);
 
-		        // Styles to simulate a node in an input field
-		    var cssDefaultStyles = "white-space:pre;padding:0;margin:0;",
-		        listOfModifiers = ['direction', 'font-family', 'font-size', 'font-size-adjust', 'font-variant', 'font-weight', 'font-style', 'letter-spacing', 'line-height', 'text-align', 'text-indent', 'text-transform', 'word-wrap', 'word-spacing'];
+                // Styles to simulate a node in an input field
+            var cssDefaultStyles = "white-space:pre;padding:0;margin:0;",
+                listOfModifiers = ['direction', 'font-family', 'font-size', 'font-size-adjust', 'font-variant', 'font-weight', 'font-style', 'letter-spacing', 'line-height', 'text-align', 'text-indent', 'text-transform', 'word-wrap', 'word-spacing'];
 
-		    topPos += getInputCSS('padding-top', true);
-		    topPos += isNaN(getInputCSS('border-top-width', true)) ? 0 : getInputCSS('border-top-width', true);
-		    leftPos += getInputCSS('padding-left', true);
-		    leftPos += isNaN(getInputCSS('border-left-width', true)) ? 0 : getInputCSS('border-left-width', true);
-		    leftPos += 1; //Seems to be necessary
+            topPos += getInputCSS('padding-top', true);
+            topPos += isNaN(getInputCSS('border-top-width', true)) ? 0 : getInputCSS('border-top-width', true);
+            leftPos += getInputCSS('padding-left', true);
+            leftPos += isNaN(getInputCSS('border-left-width', true)) ? 0 : getInputCSS('border-left-width', true);
+            leftPos += 1; //Seems to be necessary
 
-		    for (var i=0; i<listOfModifiers.length; i++) {
-		        var property = listOfModifiers[i];
-		        cssDefaultStyles += property + ':' + getInputCSS(property) +';';
-		    }
-		    // End of CSS variable checks
+            for (var i=0; i<listOfModifiers.length; i++) {
+                var property = listOfModifiers[i];
+                cssDefaultStyles += property + ':' + getInputCSS(property) +';';
+            }
+            // End of CSS variable checks
 
-		    var text = input.value,
-		        textLen = text.length,
-		        fakeClone = document.createElement("div");
-		    if(selectionStart > 0) appendPart(0, selectionStart);
-		    var fakeRange = appendPart(selectionStart, selectionEnd);
-		    if(textLen > selectionEnd) appendPart(selectionEnd, textLen);
+            var text = input.value,
+                textLen = text.length,
+                fakeClone = document.createElement("div");
+            if(selectionStart > 0) appendPart(0, selectionStart);
+            var fakeRange = appendPart(selectionStart, selectionEnd);
+            if(textLen > selectionEnd) appendPart(selectionEnd, textLen);
 
-		    // Styles to inherit the font styles of the element
-		    fakeClone.style.cssText = cssDefaultStyles;
+            // Styles to inherit the font styles of the element
+            fakeClone.style.cssText = cssDefaultStyles;
 
-		    // Styles to position the text node at the desired position
-		    fakeClone.style.position = "absolute";
-		    fakeClone.style.top = topPos + "px";
-		    fakeClone.style.left = leftPos + "px";
-		    fakeClone.style.width = width + "px";
-		    fakeClone.style.height = height + "px";
-		    document.body.appendChild(fakeClone);
-		    var returnValue = fakeRange.getBoundingClientRect(); //Get rect
+            // Styles to position the text node at the desired position
+            fakeClone.style.position = "absolute";
+            fakeClone.style.top = topPos + "px";
+            fakeClone.style.left = leftPos + "px";
+            fakeClone.style.width = width + "px";
+            fakeClone.style.height = height + "px";
+            document.body.appendChild(fakeClone);
+            var returnValue = fakeRange.getBoundingClientRect(); //Get rect
 
-		    if (!debug) fakeClone.parentNode.removeChild(fakeClone); //Remove temp
-		    return returnValue;
+            if (!debug) fakeClone.parentNode.removeChild(fakeClone); //Remove temp
+            return returnValue;
 
-		    // Local functions for readability of the previous code
-		    function appendPart(start, end){
-		        var span = document.createElement("span");
-		        span.style.cssText = cssDefaultStyles; //Force styles to prevent unexpected results
-		        span.textContent = text.substring(start, end);
-		        fakeClone.appendChild(span);
-		        return span;
-		    }
-		    // Computing offset position
-		    function getInputOffset(){
-		        var body = document.body,
-		            win = 'defaultView' in document? document.defaultView : document.parentWindow,
-		            docElem = document.documentElement,
-		            box = document.createElement('div');
-		        box.style.paddingLeft = box.style.width = "1px";
-		        body.appendChild(box);
-		        var isBoxModel = box.offsetWidth == 2;
-		        body.removeChild(box);
-		        box = input.getBoundingClientRect();
-		        var clientTop  = docElem.clientTop  || body.clientTop  || 0,
-		            clientLeft = docElem.clientLeft || body.clientLeft || 0,
-		            scrollTop  = 'pageYOffset' in win ? win.pageYOffset : body.scrollTop,
-		            scrollLeft = 'pageXOffset' in win ? win.pageXOffset : body.scrollLeft;
-		        return {
-		            top : box.top  + scrollTop  - clientTop,
-		            left: box.left + scrollLeft - clientLeft};
-		    }
-		    function getInputCSS(prop, isnumber){
-		        var win = 'defaultView' in document? document.defaultView : document.parentWindow,
-		        	val = win.getComputedStyle(input, null).getPropertyValue(prop);
-		        return isnumber ? parseFloat(val) : val;
-		    }
-		}
+            // Local functions for readability of the previous code
+            function appendPart(start, end){
+                var span = document.createElement("span");
+                span.style.cssText = cssDefaultStyles; //Force styles to prevent unexpected results
+                span.textContent = text.substring(start, end);
+                fakeClone.appendChild(span);
+                return span;
+            }
+            // Computing offset position
+            function getInputOffset(){
+                var body = document.body,
+                    win = 'defaultView' in document? document.defaultView : document.parentWindow,
+                    docElem = document.documentElement,
+                    box = document.createElement('div');
+                box.style.paddingLeft = box.style.width = "1px";
+                body.appendChild(box);
+                var isBoxModel = box.offsetWidth == 2;
+                body.removeChild(box);
+                box = input.getBoundingClientRect();
+                var clientTop  = docElem.clientTop  || body.clientTop  || 0,
+                    clientLeft = docElem.clientLeft || body.clientLeft || 0,
+                    scrollTop  = 'pageYOffset' in win ? win.pageYOffset : body.scrollTop,
+                    scrollLeft = 'pageXOffset' in win ? win.pageXOffset : body.scrollLeft;
+                return {
+                    top : box.top  + scrollTop  - clientTop,
+                    left: box.left + scrollLeft - clientLeft};
+            }
+            function getInputCSS(prop, isnumber){
+                var win = 'defaultView' in document? document.defaultView : document.parentWindow,
+                    val = win.getComputedStyle(input, null).getPropertyValue(prop);
+                return isnumber ? parseFloat(val) : val;
+            }
+        }
 };
 
 var jsonCompositeTemplate = '<div id="json-composite"><div id="validator-placeholder1"></div><div id="validator-placeholder2"></div><div id="diff-placeholder"></div><a href="#" title="Tips and Tricks" id="help"><span class="icon">Tips and Tricks</span></a><div id="tips-and-tricks"><a id="close-tips" class="close-btn" href="#">X</a><h1>JSON Lint Pro</h1><h2>The easiest way to validate and format JSON</h2><ul><li>Type your JSON into the textarea, or enter a remote URL</li><li>Use the split mode to speed up your workflow, or to run a diff.</li><li>Use the delete button to quickly clear your input.</li></ul><p>A project from the <a href="http://lab.arc90.com">Arc90 Lab</a>. Check out the source on <a href="https://github.com/arc90/jsonlintpro">GitHub</a>. Props to <a href="http://www.crockford.com/">Douglas Crockford</a> of <a href="http://www.json.org">JSON</a> and <a href="http://www.jslint.com">JS Lint</a>, and <a href="http://zaa.ch/">Zach Carter</a>, who provided the <a href="https://github.com/zaach/jsonlint"> JS implementation of JSONlint</a>.</p></div></div>',
-	validatorTemplate = '<form class="JSONValidate" method="post" action="." name="JSONValidate"><textarea class="json_input" name="json_input" class="json_input" rows="30" cols="100" spellcheck="false" placeholder="Enter json or a url to validate..."></textarea><a href="#" title="Run validation" class="button validate"><span class="icon">Lint Me!</span></a><a href="#" title="Compare two JSON sets" class="button split-view"><span class="icon">Split View</span></a>	<a href="#" title="Delete the current data" class="button reset"><span class="icon">Reset</span></a><a href="#" title="Run validation and perform a diff" class="button diff"><span class="icon">Diff</span></a></form>',
-	errorTemplate = '<div class="error-view"><a class="close-btn" href="#">X</a><span class="arrow-down"></span><pre class="results"></pre></div>',
-	diffTemplate = '<div id="diff-view"><a href="#" title="Run validation and perform a diff" class="button diff"><span class="icon">Diff</span></a><a href="#" title="Cancel diff" class="button cancel-diff"><span class="icon">Cancel diff</span></a><div class="json_input" contenteditable="true"></div></div>';
+    validatorTemplate = '<form class="JSONValidate" method="post" action="." name="JSONValidate"><textarea class="json_input" name="json_input" class="json_input" rows="30" cols="100" spellcheck="false" placeholder="Enter json or a url to validate..."></textarea><a href="#" title="Run validation" class="button validate"><span class="icon">Lint Me!</span></a><a href="#" title="Compare two JSON sets" class="button split-view"><span class="icon">Split View</span></a>    <a href="#" title="Delete the current data" class="button reset"><span class="icon">Reset</span></a><a href="#" title="Run validation and perform a diff" class="button diff"><span class="icon">Diff</span></a></form>',
+    errorTemplate = '<div class="error-view"><a class="close-btn" href="#">X</a><span class="arrow-down"></span><pre class="results"></pre></div>',
+    diffTemplate = '<div id="diff-view"><a href="#" title="Run validation and perform a diff" class="button diff"><span class="icon">Diff</span></a><a href="#" title="Cancel diff" class="button cancel-diff"><span class="icon">Cancel diff</span></a><div class="json_input" contenteditable="true"></div></div>';
 
 
 var FADE_SPEED = 100,
-	TABCHARS = "    ",
-	PADDING = 40,
-	FADE_SPEED = 150,
-	ARROW_OFFSET = 10,
-	JSONComposite = Backbone.View.extend({
-		events : {
-			'click #close-tips' : 'onHideHelp',
-			'click #help'       : 'onShowHelp'
-		},
+    TABCHARS = "    ",
+    PADDING = 40,
+    FADE_SPEED = 150,
+    ARROW_OFFSET = 10,
+    JSONComposite = Backbone.View.extend({
+        events : {
+            'click #close-tips' : 'onHideHelp',
+            'click #help'       : 'onShowHelp'
+        },
 
-		initialize : function () {
-			_.bindAll(this);
+        initialize : function () {
+            _.bindAll(this);
 
-			this.json 			= this.options.json;
-			this.windowObject 	= this.options.windowObject;
+            this.json           = this.options.json;
+            this.windowObject   = this.options.windowObject;
 
-			$(this.windowObject).resize(this.resize);
+            $(this.windowObject).resize(this.resize);
 
-	        this.render();
-		},
+            this.render();
+        },
 
-		render : function () {
-			var el = $(jsonCompositeTemplate);
+        render : function () {
+            var el = $(jsonCompositeTemplate);
 
-			this.$el.replaceWith(el);
-			this.setElement(el);
+            this.$el.replaceWith(el);
+            this.setElement(el);
 
-			this.loadSubviews();
-		},
-
-		loadSubviews : function () {
-			// this needs to be in a composite
-			this.primaryValidator = new ValidatorView({
-			    el 			: this.$('#validator-placeholder1'),
-				json	 	: this.options.json,
-				className	: 'primary'
-		    });
-
-		    this.secondaryValidator  = new SecondaryValidatorView({
-			    el 	: this.$('#validator-placeholder2')
-		    });
-
-		    this.diffView  = new DiffView({
-			    el 	: this.$('#diff-placeholder')
-		    });
-
-			this.primaryValidator.on('split:enter', 	this.enterSplitMode);
-			this.secondaryValidator.on('split:exit',   	this.exitSplitMode);
-			this.secondaryValidator.on('diff',   		this.enterDiffMode);
-			this.diffView.on('diff:cancel',   			this.exitDiffMode);
-			this.diffView.on('diff',   					this._setDiff);
+            this.loadSubviews();
+        },
+
+        loadSubviews : function () {
+            // this needs to be in a composite
+            this.primaryValidator = new ValidatorView({
+                el          : this.$('#validator-placeholder1'),
+                json        : this.options.json,
+                className   : 'primary'
+            });
+
+            this.secondaryValidator  = new SecondaryValidatorView({
+                el  : this.$('#validator-placeholder2')
+            });
+
+            this.diffView  = new DiffView({
+                el  : this.$('#diff-placeholder')
+            });
+
+            this.primaryValidator.on('split:enter',     this.enterSplitMode);
+            this.secondaryValidator.on('split:exit',    this.exitSplitMode);
+            this.secondaryValidator.on('diff',          this.enterDiffMode);
+            this.diffView.on('diff:cancel',             this.exitDiffMode);
+            this.diffView.on('diff',                    this._setDiff);
 
-			this.$('.json_input').linedtextarea();
+            this.$('.json_input').linedtextarea();
 
-	        _.delay(this.resize, 150);
-		},
+            _.delay(this.resize, 150);
+        },
 
-		onShowHelp : function (ev) {
-			ev.preventDefault();
+        onShowHelp : function (ev) {
+            ev.preventDefault();
 
-			this.$('#tips-and-tricks').fadeIn(FADE_SPEED);
-		},
+            this.$('#tips-and-tricks').fadeIn(FADE_SPEED);
+        },
 
-		onHideHelp : function (ev) {
-			ev.preventDefault();
+        onHideHelp : function (ev) {
+            ev.preventDefault();
 
-			this.$('#tips-and-tricks').fadeOut(FADE_SPEED);
-		},
+            this.$('#tips-and-tricks').fadeOut(FADE_SPEED);
+        },
 
-		resize : function () {
-			var height = $(this.windowObject).height();
+        resize : function () {
+            var height = $(this.windowObject).height();
 
-			this.$('.json_input').height(height);
-		},
+            this.$('.json_input').height(height);
+        },
 
-		enterSplitMode : function () {
-		    this.primaryValidator.enterSplitMode();
-		},
+        enterSplitMode : function () {
+            this.primaryValidator.enterSplitMode();
+        },
 
-	    exitSplitMode : function () {
-		    this.primaryValidator.exitSplitMode(this.secondaryValidator.resetView);
-	    },
+        exitSplitMode : function () {
+            this.primaryValidator.exitSplitMode(this.secondaryValidator.resetView);
+        },
 
-	    enterDiffMode : function () {
-		    if (this._setDiff()) {
-			    if (!this.diffView.isActive()) {
-				    this.primaryValidator.enterDiffMode();
+        enterDiffMode : function () {
+            if (this._setDiff()) {
+                if (!this.diffView.isActive()) {
+                    this.primaryValidator.enterDiffMode();
 
-				    this.secondaryValidator.enterDiffMode();
+                    this.secondaryValidator.enterDiffMode();
 
-				  	this.diffView.onShow();
-			  	}
-		    }
-	    },
+                    this.diffView.onShow();
+                }
+            }
+        },
 
-	    exitDiffMode : function () {
-		  	this.primaryValidator.exitDiffMode();
+        exitDiffMode : function () {
+            this.primaryValidator.exitDiffMode();
 
-		    this.secondaryValidator.exitDiffMode();
+            this.secondaryValidator.exitDiffMode();
 
-		  	this.diffView.onHide();
-	    },
+            this.diffView.onHide();
+        },
 
-	    _setDiff : function () {
-	    	this.primaryValidator.validate();
-		    this.secondaryValidator.validate();
+        _setDiff : function () {
+            this.primaryValidator.validate();
+            this.secondaryValidator.validate();
 
-		   	var valA = this.primaryValidator.getValue(),
-		  		valB = this.secondaryValidator.getValue(),
-		  		diff;
+            var valA = this.primaryValidator.getValue(),
+                valB = this.secondaryValidator.getValue(),
+                diff;
 
-		  	if (valA.length && valB.length) {
-		  		diff = htmlDiff(valA, valB);
+            if (valA.length && valB.length) {
+                diff = htmlDiff(valA, valB);
 
-			  	this.diffView.setHTML(diff);
-			  	return true;
-		  	}
+                this.diffView.setHTML(diff);
+                return true;
+            }
 
-		  	return false;
-	    }
-	}),
-	ValidatorView = Backbone.View.extend({
-		events : {
-			'click .validate' 		: 'onValidate',
-			'keyup .json_input' 	: 'onKeyUp',
-			'keydown .json_input' 	: 'onKeyDown',
-			'click .reset' 			: 'onReset',
-			'click .split-view'     : 'onSplitView',
-			'click .diff'			: 'onDiff'
-		},
+            return false;
+        }
+    }),
+    ValidatorView = Backbone.View.extend({
+        events : {
+            'click .validate'       : 'onValidate',
+            'keyup .json_input'     : 'onKeyUp',
+            'keydown .json_input'   : 'onKeyDown',
+            'click .reset'          : 'onReset',
+            'click .split-view'     : 'onSplitView',
+            'click .diff'           : 'onDiff'
+        },
 
-		initialize : function () {
-			_.bindAll(this);
+        initialize : function () {
+            _.bindAll(this);
 
-			_.defaults(this.options, {
-				reformat 	 : true,
-				json 		 : false,
-				windowObject : window,
-				className	 : ''
-			});
+            _.defaults(this.options, {
+                reformat     : true,
+                json         : false,
+                windowObject : window,
+                className    : ''
+            });
 
-			this.json 	= this.options.json;
-			this.reformat 	= this.options.reformat;
-			this.windowObject = this.options.windowObject;
+            this.json   = this.options.json;
+            this.reformat   = this.options.reformat;
+            this.windowObject = this.options.windowObject;
 
-			$(this.windowObject).resize(this.resize);
+            $(this.windowObject).resize(this.resize);
 
-	        this.render();
-		},
+            this.render();
+        },
 
-		render : function () {
-			var el = $(validatorTemplate);
+        render : function () {
+            var el = $(validatorTemplate);
 
-			this.$el.replaceWith(el);
-			this.setElement(el);
+            this.$el.replaceWith(el);
+            this.setElement(el);
 
-			this.$el.addClass(this.options.className);
+            this.$el.addClass(this.options.className);
 
-			this.textarea = this.$('.json_input');
+            this.textarea = this.$('.json_input');
 
-			this.textarea.scroll(_.bind(function () {
-				var offset = this.textarea.scrollTop();
+            this.textarea.scroll(_.bind(function () {
+                var offset = this.textarea.scrollTop();
 
-				this.errorView.setScrollOffset(offset);
-			}, this));
+                this.errorView.setScrollOffset(offset);
+            }, this));
 
-			this._checkForJSON();
+            this._checkForJSON();
 
-			this.createErrorView();
+            this.createErrorView();
 
-	        _.delay(this.resize, 150);
-		},
+            _.delay(this.resize, 150);
+        },
 
-		createErrorView : function () {
-			this.errorView = new ErrorView({
-				container : this.$el
-			});
+        createErrorView : function () {
+            this.errorView = new ErrorView({
+                container : this.$el
+            });
 
-			this.errorView.on('error:hide', this.resetErrors);
+            this.errorView.on('error:hide', this.resetErrors);
 
-			this.$el.append(this.errorView.$el);
-		},
+            this.$el.append(this.errorView.$el);
+        },
 
-		resize : function () {
-			var height = $(this.windowObject).height();
+        resize : function () {
+            var height = $(this.windowObject).height();
 
-			this.$el.height(height);
-			this.textarea.height(height - PADDING);
-		},
+            this.$el.height(height);
+            this.textarea.height(height - PADDING);
+        },
 
-		/**
-		* Validate any json passes in through the URL
-		* @usage: ?json={}
-		*/
-		_checkForJSON : function () {
-	        if (this.json) {
-	            this.textarea.val(this.json);
+        /**
+        * Validate any json passes in through the URL
+        * @usage: ?json={}
+        */
+        _checkForJSON : function () {
+            if (this.json) {
+                this.textarea.val(this.json);
 
-	            this.validate();
-	        }
-		},
+                this.validate();
+            }
+        },
 
-		onValidate : function (ev) {
-			ev.preventDefault();
+        onValidate : function (ev) {
+            ev.preventDefault();
 
-	        if ($.trim(this.textarea.val()).length === 0) {
-	        	return;
-	        }
+            if ($.trim(this.textarea.val()).length === 0) {
+                return;
+            }
 
-	        var jsonVal = $.trim(this.textarea.val());
+            var jsonVal = $.trim(this.textarea.val());
 
-	        if (jsonVal.substring(0, 4).toLowerCase() === "http") {
-	            $.post("js/utils/proxy.php", {"url": jsonVal}, _.bind(function (responseObj) {
-	                this.textarea.val(responseObj.content);
+            this.validate();
+        },
 
-	                this.validate();
+        onKeyUp : function (ev) {
+            this.$('.validate').removeClass('error success');
+        },
 
-	            }, this), 'json');
+        onKeyDown : function (ev) {
+            if (ev.keyCode === 9) {
+                ev.preventDefault();
 
-	        } else {
-	            this.validate();
-	        }
-		},
+                this._insertAtCaret(TABCHARS);
+            }
+        },
 
-		onKeyUp : function (ev) {
-			this.$('.validate').removeClass('error success');
-		},
+        onReset : function (ev) {
+            ev.preventDefault();
 
-		onKeyDown : function (ev) {
-			if (ev.keyCode === 9) {
-	            ev.preventDefault();
+            this.resetView();
+        },
 
-	            this._insertAtCaret(TABCHARS);
-	        }
-		},
+        resetView : function () {
+            this.textarea.val('').focus();
+            this.resetErrors();
+        },
 
-		onReset : function (ev) {
-			ev.preventDefault();
+        resetErrors : function () {
+            this.errorView.hide();
+            this.$('.validate').removeClass('error success');
+        },
 
-			this.resetView();
-		},
+        validate : function (options) {
+            options || (options = {});
 
-		resetView : function () {
-			this.textarea.val('').focus();
-			this.resetErrors();
-		},
+            _.defaults(options, {
+               success : $.noop,
+               error : $.noop
+            });
 
-		resetErrors : function () {
-			this.errorView.hide();
-			this.$('.validate').removeClass('error success');
-		},
+            var jsonVal = this.textarea.val(),
+                result;
 
-		validate : function (options) {
-			options || (options = {});
+            try {
+                result = jsl.parser.parse(jsonVal);
 
-		    _.defaults(options, {
-			   success : $.noop,
-			   error : $.noop
-		    });
+                if (result) {
+                    this._appendResult(jsonVal);
 
-	        var jsonVal = this.textarea.val(),
-	            result;
+                    options.success();
 
-	        try {
-	            result = jsl.parser.parse(jsonVal);
+                    return;
+                }
 
-	            if (result) {
-	                this._appendResult(jsonVal);
+                options.error();
+
+            } catch (parseException) {
+                this._handleParseException()
 
-	                options.success();
-
-	                return;
-	            }
-
-	            options.error();
-
-	        } catch (parseException) {
-	        	this._handleParseException()
-
-	            options.error();
-	        }
-		},
-
-		 _appendResult : function (jsonVal) {
-	    	var tab_chars = this.reformat ? TABCHARS : "";
-
-	        this.textarea.val(JSON.stringify(JSON.parse(jsonVal), null, tab_chars));
-
-			this.$('.validate').removeClass('error').addClass('success');
-			this.errorView.hide();
-	    },
-
-	    /**
-	     * If we failed to validate, run our manual formatter and then re-validate so that we
-	     * can get a better line number. On a successful validate, we don't want to run our
-	     * manual formatter because the automatic one is faster and probably more reliable.
-	    **/
-	    _handleParseException : function () {
-	        var jsonVal = this.textarea.val(),
-	            result;
-
-	        try {
-	            if (this.reformat) {
-	                jsonVal = jsl.format.formatJson(jsonVal);
-
-	                this.textarea.val(jsonVal);
-
-	                result = jsl.parser.parse(jsonVal);
-	            }
-	        } catch(e) {
-	            parseException = e;
-	        }
-
-	        var lineMatches = parseException.message.match(/line ([0-9]*)/),
-				lineNum,
-				lineStart,
-				lineEnd,
-				offset;
-
-	        if (lineMatches && typeof lineMatches === "object" && lineMatches.length > 1) {
-	            lineNum = parseInt(lineMatches[1], 10);
-
-	            if (lineNum === 1) {
-	                lineStart = 0;
-	            } else {
-	                lineStart = this._getNthPos(jsonVal, "\n", lineNum - 1);
-	            }
-
-	            lineEnd = jsonVal.indexOf("\n", lineStart);
-	            if (lineEnd < 0) {
-	                lineEnd = jsonVal.length;
-	            }
-
-	            this.textarea.focus().caret(lineStart, lineEnd);
-
-	            offset = utils.getTextBoundingRect(this.textarea[0],lineStart, lineEnd, false);
-	        }
-
-	        this.showValidationError(offset);
-	    },
-
-	    showValidationError : function (offset) {
-		    this.errorView.setError(parseException.message);
-		    this.errorView.setPosition(offset);
-		    this.errorView.show();
-
-	        this.$('.validate').removeClass('success').addClass('error');
-	    },
-
-	    /**
-	     * Function to insert our tab spaces
-	     */
-	    _insertAtCaret : function (text) {
-	    	element = this.textarea[0];
-
-	        if (document.selection) {
-	            element.focus();
-	            var sel = document.selection.createRange();
-	            sel.text = text;
-	            element.focus();
-	        } else if (element.selectionStart || element.selectionStart === 0) {
-	            var startPos = element.selectionStart,
-	            	endPos = element.selectionEnd,
-	            	scrollTop = element.scrollTop;
-
-	            element.value = element.value.substring(0, startPos) + text + element.value.substring(endPos, element.value.length);
-	            element.focus();
-	            element.selectionStart = startPos + text.length;
-	            element.selectionEnd = startPos + text.length;
-	            element.scrollTop = scrollTop;
-	        } else {
-	            element.value += text;
-	            element.focus();
-	        }
-	    },
-
-	    /**
-	     * Get the Nth position of a character in a string
-	     * @searchStr the string to search through
-	     * @char the character to find
-	     * @pos int the nth character to find, 1 based.
-	     *
-	     * @return int the position of the character found
-	    **/
-	    _getNthPos : function (searchStr, char, pos) {
-	        var i,
-	            charCount = 0,
-	            strArr = searchStr.split(char);
-
-	        if (pos === 0) {
-	            return 0;
-	        }
-
-	        for (i = 0; i < pos; i++) {
-	            if (i >= strArr.length) {
-	                return -1;
-	            }
-
-	            // +1 because we split out some characters
-	            charCount += strArr[i].length + char.length;
-	        }
-
-	        return charCount;
-	    },
-
-	    hideSplitToggle : function () {
-		  	this.$('.split-view').hide();
-	    },
-
-	    showSplitToggle : function () {
-		  	this.$('.split-view').show();
-	    },
-
-	    enterSplitMode : function (callback) {
-	    	callback || (callback = $.noop);
-
-	    	this.hideSplitToggle();
-
-		    this.$el.animate({
-			   width : '50%'
-		    }, FADE_SPEED, callback);
-	    },
-
-	    exitSplitMode : function (callback) {
-	    	callback || (callback = $.noop);
-
-		   	this.$el.animate({
-			   width : '100%'
-		    }, FADE_SPEED, _.bind(function () {
-			    callback();
-			    this.showSplitToggle();
-		    }, this));
-	    },
-
-	    enterDiffMode : function () {
-		  	this.$el.animate({
-			   width : '33%'
-		    }, FADE_SPEED);
-	    },
-
-	    exitDiffMode : function () {
-		    this.$el.animate({
-			   width : '50%'
-		    }, FADE_SPEED);
-	    },
-
-	    onSplitView : function (ev) {
-		    ev.preventDefault();
-
-		    this.trigger('split:enter');
-	    },
-
-	    onDiff : function (ev) {
-		    ev.preventDefault();
-
-		    this.trigger('diff');
-	    },
-
-	    getValue : function () {
-		    return this.textarea.val();
-	    }
-	}),
-	SecondaryValidatorView = ValidatorView.extend({
-		render : function () {
-			ValidatorView.prototype.render.call(this);
-
-			this.$('.split-view').addClass('cancel');
-
-			this.$('.diff').css('display', 'block');
-		},
-
-	    onSplitView : function (ev) {
-		    ev.preventDefault();
-
-		    this.trigger('split:exit');
-	    },
-
-	    enterDiffMode : function () {
-		    this.$el.animate({
-			   width : '33%',
-			   left: '67%'
-		    }, FADE_SPEED);
-
-		    this.$('.diff, .split-view').hide();
-	    },
-
-	    exitDiffMode : function () {
-		    this.$el.animate({
-			   width : '50%',
-			   left: '50%'
-		    }, FADE_SPEED);
-
-		    this.$('.diff, .split-view').show();
-	    }
-	}),
-	DiffView = Backbone.View.extend({
-		events : {
-			'click .diff' : 'onDiff',
-			'click .cancel-diff' : 'onCancel'
-		},
-
-		initialize : function () {
-			_.bindAll(this);
-
-			this.windowObject = this.options.windowObject;
-
-			$(this.windowObject).resize(this.resize);
-
-	        this.render();
-		},
-
-		render : function () {
-			var el = $(diffTemplate);
-
-			this.$el.replaceWith(el);
-			this.setElement(el);
-
-			this.$('.diff').show();
-
-	        _.delay(this.resize, 150);
-		},
-
-		resize : function () {
-			var height = $(this.windowObject).height();
-
-			this.$('.json_input').height(height);
-		},
-
-		setHTML : function (html) {
-			this.$('.json_input').html(html);
-		},
-
-		isActive : function () {
-			return this.$el.hasClass('active');
-		},
-
-		onShow : function () {
-			if (!this.$el.hasClass('active')) {
-				this.$el.addClass('active')
-			}
-		},
-
-		onDiff : function (ev) {
-			ev.preventDefault();
-			this.trigger('diff');
-		},
-
-		onHide : function () {
-			if (this.$el.hasClass('active')) {
-				this.$el.removeClass('active')
-			}
-		},
-
-		onCancel : function (ev) {
-			ev.preventDefault();
-
-			this.trigger('diff:cancel');
-		}
-	}),
-	ErrorView = Backbone.View.extend({
-		events : {
-			'click .close-btn' : 'onClose'
-		},
-
-		initialize : function () {
-			_.bindAll(this);
-
-			this.container = this.options.container;
-
-	        this.render();
-		},
-
-		render : function () {
-			var el = $(errorTemplate);
-
-			this.$el.replaceWith(el);
-			this.setElement(el);
-		},
-
-		setPosition : function (offset) {
-			var topOffset =  offset.top - this.$el.outerHeight() - ARROW_OFFSET,
-				leftOffset = offset.left - this.container.offset().left;
-
-			if (topOffset < 0) {
-				topOffset = offset.bottom + ARROW_OFFSET;
-
-				this.$el.addClass('reverse');
-			} else {
-				this.$el.removeClass('reverse');
-			}
-
-			this.topOffset = topOffset;
-
-			this.$el.css({
-				top : topOffset,
-				left : leftOffset
-			});
-		},
-
-		setScrollOffset : function (offset) {
-			this.$el.css({
-				top: this.topOffset - offset
-			});
-		},
-
-		setError : function (error) {
-			this.$('.results').text(error);
-		},
-
-		show : function () {
-			if (!this.$el.is(':visible')) {
-				this.$el.show();
-			}
-		},
-
-		hide : function () {
-			if (this.$el.is(':visible')) {
-				this.$el.hide();
-			}
-		},
-
-		onClose : function (ev) {
-			ev.preventDefault();
-
-			this.trigger('error:hide');
-		}
-	});
+                options.error();
+            }
+        },
+
+         _appendResult : function (jsonVal) {
+            var tab_chars = this.reformat ? TABCHARS : "";
+
+            this.textarea.val(JSON.stringify(JSON.parse(jsonVal), null, tab_chars));
+
+            this.$('.validate').removeClass('error').addClass('success');
+            this.errorView.hide();
+        },
+
+        /**
+         * If we failed to validate, run our manual formatter and then re-validate so that we
+         * can get a better line number. On a successful validate, we don't want to run our
+         * manual formatter because the automatic one is faster and probably more reliable.
+        **/
+        _handleParseException : function () {
+            var jsonVal = this.textarea.val(),
+                result;
+
+            try {
+                if (this.reformat) {
+                    jsonVal = jsl.format.formatJson(jsonVal);
+
+                    this.textarea.val(jsonVal);
+
+                    result = jsl.parser.parse(jsonVal);
+                }
+            } catch(e) {
+                parseException = e;
+            }
+
+            var lineMatches = parseException.message.match(/line ([0-9]*)/),
+                lineNum,
+                lineStart,
+                lineEnd,
+                offset;
+
+            if (lineMatches && typeof lineMatches === "object" && lineMatches.length > 1) {
+                lineNum = parseInt(lineMatches[1], 10);
+
+                if (lineNum === 1) {
+                    lineStart = 0;
+                } else {
+                    lineStart = this._getNthPos(jsonVal, "\n", lineNum - 1);
+                }
+
+                lineEnd = jsonVal.indexOf("\n", lineStart);
+                if (lineEnd < 0) {
+                    lineEnd = jsonVal.length;
+                }
+
+                this.textarea.focus().caret(lineStart, lineEnd);
+
+                offset = utils.getTextBoundingRect(this.textarea[0],lineStart, lineEnd, false);
+            }
+
+            this.showValidationError(offset);
+        },
+
+        showValidationError : function (offset) {
+            this.errorView.setError(parseException.message);
+            this.errorView.setPosition(offset);
+            this.errorView.show();
+
+            this.$('.validate').removeClass('success').addClass('error');
+        },
+
+        /**
+         * Function to insert our tab spaces
+         */
+        _insertAtCaret : function (text) {
+            element = this.textarea[0];
+
+            if (document.selection) {
+                element.focus();
+                var sel = document.selection.createRange();
+                sel.text = text;
+                element.focus();
+            } else if (element.selectionStart || element.selectionStart === 0) {
+                var startPos = element.selectionStart,
+                    endPos = element.selectionEnd,
+                    scrollTop = element.scrollTop;
+
+                element.value = element.value.substring(0, startPos) + text + element.value.substring(endPos, element.value.length);
+                element.focus();
+                element.selectionStart = startPos + text.length;
+                element.selectionEnd = startPos + text.length;
+                element.scrollTop = scrollTop;
+            } else {
+                element.value += text;
+                element.focus();
+            }
+        },
+
+        /**
+         * Get the Nth position of a character in a string
+         * @searchStr the string to search through
+         * @char the character to find
+         * @pos int the nth character to find, 1 based.
+         *
+         * @return int the position of the character found
+        **/
+        _getNthPos : function (searchStr, char, pos) {
+            var i,
+                charCount = 0,
+                strArr = searchStr.split(char);
+
+            if (pos === 0) {
+                return 0;
+            }
+
+            for (i = 0; i < pos; i++) {
+                if (i >= strArr.length) {
+                    return -1;
+                }
+
+                // +1 because we split out some characters
+                charCount += strArr[i].length + char.length;
+            }
+
+            return charCount;
+        },
+
+        hideSplitToggle : function () {
+            this.$('.split-view').hide();
+        },
+
+        showSplitToggle : function () {
+            this.$('.split-view').show();
+        },
+
+        enterSplitMode : function (callback) {
+            callback || (callback = $.noop);
+
+            this.hideSplitToggle();
+
+            this.$el.animate({
+               width : '50%'
+            }, FADE_SPEED, callback);
+        },
+
+        exitSplitMode : function (callback) {
+            callback || (callback = $.noop);
+
+            this.$el.animate({
+               width : '100%'
+            }, FADE_SPEED, _.bind(function () {
+                callback();
+                this.showSplitToggle();
+            }, this));
+        },
+
+        enterDiffMode : function () {
+            this.$el.animate({
+               width : '33%'
+            }, FADE_SPEED);
+        },
+
+        exitDiffMode : function () {
+            this.$el.animate({
+               width : '50%'
+            }, FADE_SPEED);
+        },
+
+        onSplitView : function (ev) {
+            ev.preventDefault();
+
+            this.trigger('split:enter');
+        },
+
+        onDiff : function (ev) {
+            ev.preventDefault();
+
+            this.trigger('diff');
+        },
+
+        getValue : function () {
+            return this.textarea.val();
+        }
+    }),
+    SecondaryValidatorView = ValidatorView.extend({
+        render : function () {
+            ValidatorView.prototype.render.call(this);
+
+            this.$('.split-view').addClass('cancel');
+
+            this.$('.diff').css('display', 'block');
+        },
+
+        onSplitView : function (ev) {
+            ev.preventDefault();
+
+            this.trigger('split:exit');
+        },
+
+        enterDiffMode : function () {
+            this.$el.animate({
+               width : '33%',
+               left: '67%'
+            }, FADE_SPEED);
+
+            this.$('.diff, .split-view').hide();
+        },
+
+        exitDiffMode : function () {
+            this.$el.animate({
+               width : '50%',
+               left: '50%'
+            }, FADE_SPEED);
+
+            this.$('.diff, .split-view').show();
+        }
+    }),
+    DiffView = Backbone.View.extend({
+        events : {
+            'click .diff' : 'onDiff',
+            'click .cancel-diff' : 'onCancel'
+        },
+
+        initialize : function () {
+            _.bindAll(this);
+
+            this.windowObject = this.options.windowObject;
+
+            $(this.windowObject).resize(this.resize);
+
+            this.render();
+        },
+
+        render : function () {
+            var el = $(diffTemplate);
+
+            this.$el.replaceWith(el);
+            this.setElement(el);
+
+            this.$('.diff').show();
+
+            _.delay(this.resize, 150);
+        },
+
+        resize : function () {
+            var height = $(this.windowObject).height();
+
+            this.$('.json_input').height(height);
+        },
+
+        setHTML : function (html) {
+            this.$('.json_input').html(html);
+        },
+
+        isActive : function () {
+            return this.$el.hasClass('active');
+        },
+
+        onShow : function () {
+            if (!this.$el.hasClass('active')) {
+                this.$el.addClass('active')
+            }
+        },
+
+        onDiff : function (ev) {
+            ev.preventDefault();
+            this.trigger('diff');
+        },
+
+        onHide : function () {
+            if (this.$el.hasClass('active')) {
+                this.$el.removeClass('active')
+            }
+        },
+
+        onCancel : function (ev) {
+            ev.preventDefault();
+
+            this.trigger('diff:cancel');
+        }
+    }),
+    ErrorView = Backbone.View.extend({
+        events : {
+            'click .close-btn' : 'onClose'
+        },
+
+        initialize : function () {
+            _.bindAll(this);
+
+            this.container = this.options.container;
+
+            this.render();
+        },
+
+        render : function () {
+            var el = $(errorTemplate);
+
+            this.$el.replaceWith(el);
+            this.setElement(el);
+        },
+
+        setPosition : function (offset) {
+            var topOffset =  offset.top - this.$el.outerHeight() - ARROW_OFFSET,
+                leftOffset = offset.left - this.container.offset().left;
+
+            if (topOffset < 0) {
+                topOffset = offset.bottom + ARROW_OFFSET;
+
+                this.$el.addClass('reverse');
+            } else {
+                this.$el.removeClass('reverse');
+            }
+
+            this.topOffset = topOffset;
+
+            this.$el.css({
+                top : topOffset,
+                left : leftOffset
+            });
+        },
+
+        setScrollOffset : function (offset) {
+            this.$el.css({
+                top: this.topOffset - offset
+            });
+        },
+
+        setError : function (error) {
+            this.$('.results').text(error);
+        },
+
+        show : function () {
+            if (!this.$el.is(':visible')) {
+                this.$el.show();
+            }
+        },
+
+        hide : function () {
+            if (this.$el.is(':visible')) {
+                this.$el.hide();
+            }
+        },
+
+        onClose : function (ev) {
+            ev.preventDefault();
+
+            this.trigger('error:hide');
+        }
+    });
 
 $(function () {
-	var JSON_PARAM = utils._getURLParameter('json');
+    var JSON_PARAM = utils._getURLParameter('json');
 
-	// this needs to be in a composite
-	new JSONComposite({
-	    el 		: $('#json-composite-placeholder'),
-		json 	: JSON_PARAM
+    // this needs to be in a composite
+    new JSONComposite({
+        el      : $('#json-composite-placeholder'),
+        json    : JSON_PARAM
     });
 });
 
