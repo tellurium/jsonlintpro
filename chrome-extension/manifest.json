@@ -1,0 +1,11 @@
+{
+    "manifest_version": 2,
+
+    "name": "One JSON app",
+    "description": "One simple json app",
+    "version": "1.0",
+
+    "permissions": [
+        "activeTab"
+    ]
+}
