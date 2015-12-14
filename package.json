@@ -1,28 +1,39 @@
 {
-  "name": "json-app",
-  "version": "0.0.1",
-  "description": "One simple json app.",
-  "main": "index.html",
-  "dependencies": {
-    "backbone": "^1.2.3"
-  },
-  "devDependencies": {
-    "webpack": "^1.12.6"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/tellurium/jsonlintpro.git"
-  },
-  "keywords": [
-    "json"
-  ],
-  "author": "shuai.xia",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/tellurium/jsonlintpro/issues"
-  },
-  "homepage": "https://github.com/tellurium/jsonlintpro"
+    "name": "json-app",
+    "version": "0.0.1",
+    "description": "One simple json app.",
+    "main": "index.html",
+    "dependencies": {
+        "backbone": "^1.2.3",
+        "jquery": "^2.1.4",
+        "jsonlint": "^1.6.2",
+        "underscore": "^1.8.3"
+    },
+    "devDependencies": {
+        "babel-core": "^6.3.17",
+        "babel-loader": "^6.2.0",
+        "css-loader": "^0.23.0",
+        "file-loader": "^0.8.5",
+        "napa": "^2.2.0",
+        "style-loader": "^0.13.0",
+        "webpack": "^1.12.6",
+        "webpack-dev-server": "^1.14.0"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "install": "napa aw20/JQueryLinedText"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/tellurium/jsonlintpro.git"
+    },
+    "keywords": [
+        "json"
+    ],
+    "author": "shuai.xia",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/tellurium/jsonlintpro/issues"
+    },
+    "homepage": "https://github.com/tellurium/jsonlintpro"
 }
