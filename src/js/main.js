@@ -567,11 +567,16 @@ var FADE_SPEED = 100,
             'click #help'       : 'onShowHelp'
         },
 
-        initialize : function () {
-            _.bindAll(this);
+        initialize : function (options) {
+            _.bindAll(
+                this,
+                'onShowHelp',
+                'onHideHelp',
+                'resize'
+            );
 
-            this.json           = this.options.json;
-            this.windowObject   = this.options.windowObject;
+            this.json           = options.json;
+            this.windowObject   = options.windowObject;
 
             $(this.windowObject).resize(this.resize);
 
@@ -591,7 +596,7 @@ var FADE_SPEED = 100,
             // this needs to be in a composite
             this.primaryValidator = new ValidatorView({
                 el          : this.$('#validator-placeholder1'),
-                json        : this.options.json,
+                json        : this.json,
                 className   : 'primary'
             });
 
@@ -688,19 +693,29 @@ var FADE_SPEED = 100,
             'click .diff'           : 'onDiff'
         },
 
-        initialize : function () {
-            _.bindAll(this);
+        initialize : function (options) {
+            _.bindAll(
+                this,
+                'onValidate',
+                'onKeyUp',
+                'onKeyDown',
+                'onReset',
+                'onSplitView',
+                'onDiff',
+                'resize'
+            );
 
-            _.defaults(this.options, {
+            _.defaults(options, {
                 reformat     : true,
                 json         : false,
                 windowObject : window,
                 className    : ''
             });
 
-            this.json   = this.options.json;
-            this.reformat   = this.options.reformat;
-            this.windowObject = this.options.windowObject;
+            this.json   = options.json;
+            this.reformat   = options.reformat;
+            this.windowObject = options.windowObject;
+            this.className = options.className;
 
             $(this.windowObject).resize(this.resize);
 
@@ -713,7 +728,7 @@ var FADE_SPEED = 100,
             this.$el.replaceWith(el);
             this.setElement(el);
 
-            this.$el.addClass(this.options.className);
+            this.$el.addClass(this.className);
 
             this.textarea = this.$('.json_input');
 
@@ -1048,10 +1063,15 @@ var FADE_SPEED = 100,
             'click .cancel-diff' : 'onCancel'
         },
 
-        initialize : function () {
-            _.bindAll(this);
+        initialize : function (options) {
+            _.bindAll(
+                this,
+                'onDiff',
+                'onCancel',
+                'resize'
+            );
 
-            this.windowObject = this.options.windowObject;
+            this.windowObject = options.windowObject;
 
             $(this.windowObject).resize(this.resize);
 
@@ -1111,10 +1131,10 @@ var FADE_SPEED = 100,
             'click .close-btn' : 'onClose'
         },
 
-        initialize : function () {
-            _.bindAll(this);
+        initialize : function (options) {
+            _.bindAll(this, 'onClose');
 
-            this.container = this.options.container;
+            this.container = options.container;
 
             this.render();
         },
@@ -1176,6 +1196,8 @@ var FADE_SPEED = 100,
     });
 
 $(function () {
+    Backbone.$ = $;
+
     var JSON_PARAM = utils._getURLParameter('json');
 
     // this needs to be in a composite

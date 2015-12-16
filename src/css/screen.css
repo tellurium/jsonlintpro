@@ -110,7 +110,7 @@ body {
     -webkit-border-radius: 20px;
     font-size: 0;
     text-indent: -9999px;
-    background: rgb(173, 43, 43) url(../images/close_btn.png) 6px 6px no-repeat;
+    background: rgb(173, 43, 43) url('../images/close_btn.png') 6px 6px no-repeat;
 }
 
 .close-btn:hover {
@@ -175,7 +175,7 @@ box-shadow: 0 1px 0 #F1F1F1;
     -moz-transition: background-color 100ms;
     -webkit-transition: background-color 100ms;
     -o-transition: background-color 2s;
-    background-image: url(../images/actions_sprite.png);
+    background-image: url('../images/actions_sprite.png');
 }
 
 .button:hover {

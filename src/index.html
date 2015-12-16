@@ -1,16 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
     <meta name="description" content="JSON Lint is a web based validator and reformatter for JSON, a lightweight data-interchange format.">
 
-    <title>JSONLint - The JSON Validator</title>
+    <link rel="icon" type="image/png" href="{%= JSON.stringify(o.webpack) %}" />
 
-<!--     <link rel="stylesheet" href="css/screen.css" type="text/css" media="screen, projection">
-    <link href="css/jquery-linedtextarea.css" type="text/css" rel="stylesheet">
-    <link rel="icon" type="image/png" href="images/favicon.png" />
- -->
+    <title>JSONLint - The JSON Validator</title>
 </head>
 <body>
     <input type="hidden" id="reformat" value="1" />
@@ -24,9 +20,6 @@
         </h3>
     </div>
 
-    <!-- <script src="js/main.js"></script> -->
-    <!-- <script src="js/jsonlint/jsl.format.js"></script> -->
-    <!-- <script src="js/jsonlint/jsl.parser.js"></script> -->
     <script src="app.js"></script>
 </body>
 </html>
