@@ -575,6 +575,10 @@ var FADE_SPEED = 100,
                 this,
                 'onShowHelp',
                 'onHideHelp',
+                'enterSplitMode',
+                'exitSplitMode',
+                'enterDiffMode',
+                '_setDiff',
                 'resize'
             );
 
