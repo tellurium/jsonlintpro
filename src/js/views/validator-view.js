@@ -1,6 +1,6 @@
 var jsonlint = require('../jsonlint/jsl.parser.js');
 var jslformat = require('../jsonlint/jsl.format.js');
-var utils = require('../utils.js');
+var utils = require('../utils/utils.js');
 
 var ErrorView = require('./error-view.js');
 
