@@ -1,4 +1,3 @@
-var jsonlint = require('../jsonlint/jsl.parser.js');
 var jslformat = require('../jsonlint/jsl.format.js');
 var utils = require('../utils/utils.js');
 
@@ -154,7 +153,7 @@ var ValidatorView = Backbone.View.extend({
             result;
 
         try {
-            result = jsonlint.parse(jsonVal);
+            result = JSON.parse(jsonVal);
 
             if (result) {
                 this._appendResult(jsonVal);
@@ -197,7 +196,7 @@ var ValidatorView = Backbone.View.extend({
 
                 this.textarea.val(jsonVal);
 
-                result = jsonlint.parse(jsonVal);
+                result = JSON.parse(jsonVal);
             }
         } catch(e) {
             parseException = e;
@@ -209,24 +208,22 @@ var ValidatorView = Backbone.View.extend({
             lineEnd,
             offset;
 
-        if (lineMatches && typeof lineMatches === "object" && lineMatches.length > 1) {
-            lineNum = parseInt(lineMatches[1], 10);
+        lineNum = parseException.line;
 
-            if (lineNum === 1) {
-                lineStart = 0;
-            } else {
-                lineStart = this._getNthPos(jsonVal, "\n", lineNum - 1);
-            }
-
-            lineEnd = jsonVal.indexOf("\n", lineStart);
-            if (lineEnd < 0) {
-                lineEnd = jsonVal.length;
-            }
-
-            this.textarea.focus().caret(lineStart, lineEnd);
-
-            offset = utils.getTextBoundingRect(this.textarea[0],lineStart, lineEnd, false);
+        if (lineNum === 1) {
+            lineStart = 0;
+        } else {
+            lineStart = this._getNthPos(jsonVal, "\n", lineNum - 1);
         }
+
+        lineEnd = jsonVal.indexOf("\n", lineStart);
+        if (lineEnd < 0) {
+            lineEnd = jsonVal.length;
+        }
+
+        this.textarea.focus().caret(lineStart, lineEnd);
+
+        offset = utils.getTextBoundingRect(this.textarea[0],lineStart, lineEnd, false);
 
         this.showValidationError(offset, parseException);
     },
