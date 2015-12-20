@@ -23,7 +23,13 @@ module.exports = {
     module: {
         loaders: [
             { test: /\.css$/, loader: 'style-loader!css-loader' },
-            { test: /\.js$/, loader: 'babel-loader' },
+            {
+                test: /\.js$/,
+                loader: 'babel-loader',
+                include: [
+                    path.resolve(__dirname, 'src'),
+                ]
+            },
             { test: /\.html/, loader: 'html-loader' },
             { test: /\.(jpe?g|gif|png)$/, loader: "file-loader" }
         ]

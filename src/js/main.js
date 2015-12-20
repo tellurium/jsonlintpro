@@ -1,3 +1,6 @@
+var jslformat = require('./jsonlint/jsl.format.js');
+var jsonlint = require('./jsonlint/jsl.parser.js');
+
 if (!window.getComputedStyle) {
     window.getComputedStyle = function(el, pseudo) {
         this.el = el;
@@ -429,7 +432,7 @@ var utils = {
      * @return string the url parameter's value, if any
     **/
     _getURLParameter : function (name) {
-        param = (new RegExp(name + '=' + '(.+?)(&|$)').exec(location.search) || ['', null])[1];
+        var param = (new RegExp(name + '=' + '(.+?)(&|$)').exec(location.search) || ['', null])[1];
 
         if (param) {
             return decodeURIComponent(param);
@@ -702,6 +705,7 @@ var FADE_SPEED = 100,
                 'onReset',
                 'onSplitView',
                 'onDiff',
+                'resetErrors',
                 'resize'
             );
 
@@ -826,7 +830,7 @@ var FADE_SPEED = 100,
                 result;
 
             try {
-                result = jsl.parser.parse(jsonVal);
+                result = jsonlint.parse(jsonVal);
 
                 if (result) {
                     this._appendResult(jsonVal);
@@ -839,7 +843,7 @@ var FADE_SPEED = 100,
                 options.error();
 
             } catch (parseException) {
-                this._handleParseException()
+                this._handleParseException(parseException);
 
                 options.error();
             }
@@ -859,17 +863,17 @@ var FADE_SPEED = 100,
          * can get a better line number. On a successful validate, we don't want to run our
          * manual formatter because the automatic one is faster and probably more reliable.
         **/
-        _handleParseException : function () {
+        _handleParseException : function (parseException) {
             var jsonVal = this.textarea.val(),
                 result;
 
             try {
                 if (this.reformat) {
-                    jsonVal = jsl.format.formatJson(jsonVal);
+                    jsonVal = jslformat.formatJson(jsonVal);
 
                     this.textarea.val(jsonVal);
 
-                    result = jsl.parser.parse(jsonVal);
+                    result = jsonlint.parse(jsonVal);
                 }
             } catch(e) {
                 parseException = e;
@@ -900,10 +904,10 @@ var FADE_SPEED = 100,
                 offset = utils.getTextBoundingRect(this.textarea[0],lineStart, lineEnd, false);
             }
 
-            this.showValidationError(offset);
+            this.showValidationError(offset, parseException);
         },
 
-        showValidationError : function (offset) {
+        showValidationError : function (offset, parseException) {
             this.errorView.setError(parseException.message);
             this.errorView.setPosition(offset);
             this.errorView.show();

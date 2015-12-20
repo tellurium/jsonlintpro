@@ -1,6 +1,10 @@
+// For HTML
+require('./images/favicon.png');
+require('./images/loadspinner.gif');
+
+// For CSS
 require('./css/screen.css');
 require('./css/jquery-linedtextarea.css');
 
-require('./js/jsonlint/jsl.format.js');
-require('./js/jsonlint/jsl.parser.js');
+// For JS
 require('./js/main.js');
