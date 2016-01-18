@@ -1,7 +1,7 @@
 /**
  * jsl.format - Provide json reformatting in a character-by-character approach, so that even invalid JSON may be reformatted (to the best of its ability).
  *
-**/
+ **/
 function repeat(s, count) {
     return new Array(count + 1).join(s);
 }

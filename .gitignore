@@ -38,8 +38,10 @@ ehthumbs.db
 Thumbs.db
 
 # npm packages #
+################
 node_modules
 node_modules/
 
-# dist folders
+# dist folders #
+################
 dist/

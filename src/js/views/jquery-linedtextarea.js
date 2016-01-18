@@ -67,8 +67,8 @@
             var originalTextAreaWidth   = textarea.outerWidth();
 
             /* Wrap the text area in the elements we need */
-            var linedTextAreaDiv    = textarea.wrap("<div class='linedwrap'></div>");
-            var linedWrapDiv            = linedTextAreaDiv.parent();
+            var linedTextAreaDiv = textarea.wrap("<div class='linedwrap'></div>");
+            var linedWrapDiv = linedTextAreaDiv.parent();
 
             linedWrapDiv.prepend("<div class='lines' style='width:50px'></div>");
 

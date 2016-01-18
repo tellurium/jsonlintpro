@@ -1,4 +1,13 @@
-var diffTemplate = '<div id="diff-view"><a href="#" title="Run validation and perform a diff" class="button diff"><span class="icon">Diff</span></a><a href="#" title="Cancel diff" class="button cancel-diff"><span class="icon">Cancel diff</span></a><div class="json_input" contenteditable="true"></div></div>';
+var diffTemplate = [
+    '<div id="diff-view">',
+        '<a href="#" title="Run validation and perform a diff" class="button diff">',
+            '<span class="icon">Diff</span>',
+        '</a>',
+        '<a href="#" title="Cancel diff" class="button cancel-diff">',
+            '<span class="icon">Cancel diff</span>',
+        '</a>',
+        '<div class="json_input" contenteditable="true"></div>',
+    '</div>'].join('');
 
 var DiffView = Backbone.View.extend({
     events : {
